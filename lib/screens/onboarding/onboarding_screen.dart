@@ -1,4 +1,7 @@
+import 'package:dinder/cubits/cubit/signup_cubit.dart';
+import 'package:dinder/repositories/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'onboarding_screens.dart/screens.dart';
 import '../../widgets/custom_appbar.dart';
@@ -10,7 +13,12 @@ class OnboardingScreen extends StatelessWidget {
 
   static Route route() {
     return MaterialPageRoute(
-      builder: (context) => const OnboardingScreen(),
+      settings: RouteSettings(name: routeName),
+      builder: (context) => BlocProvider(
+        create: (_) =>
+            SignupCubit(authRepository: context.read<AuthRepository>()),
+        child: OnboardingScreen(),
+      ),
     );
   }
 
