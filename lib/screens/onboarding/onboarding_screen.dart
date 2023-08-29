@@ -33,7 +33,7 @@ class OnboardingScreen extends StatelessWidget {
         });
         return Scaffold(
           appBar: const CustomAppBar(
-            title: 'Onboarding',
+            title: 'DINDER',
           ),
           body: TabBarView(children: [
             Start(tabController: tabController),

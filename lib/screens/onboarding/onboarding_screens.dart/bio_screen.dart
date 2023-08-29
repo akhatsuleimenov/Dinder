@@ -13,6 +13,7 @@ class Bio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = TextEditingController();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
       child: Column(
@@ -20,7 +21,10 @@ class Bio extends StatelessWidget {
         children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             CustomTextHeader(text: 'Tell Me Who R U?'),
-            CustomTextField(text: 'BIO HERE'),
+            CustomTextField(
+              hint: 'BIO HERE',
+              controller: controller,
+            ),
             const SizedBox(
               height: 100,
             ),

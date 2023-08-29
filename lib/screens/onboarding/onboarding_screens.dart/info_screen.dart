@@ -13,6 +13,7 @@ class Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = TextEditingController();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
       child: Column(
@@ -29,7 +30,10 @@ class Info extends StatelessWidget {
               height: 100,
             ),
             CustomTextHeader(text: 'What\'s Your Age?'),
-            CustomTextField(text: 'ENTER YOUR AGE'),
+            CustomTextField(
+              hint: 'ENTER YOUR AGE',
+              controller: controller,
+            ),
           ]),
           Column(
             children: [
