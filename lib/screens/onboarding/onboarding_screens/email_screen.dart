@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
-import '../../../cubits/cubit/signup_cubit.dart';
+import '../../../cubits/signup/signup_cubit.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_text_header.dart';

@@ -1,11 +1,8 @@
-import 'package:dinder/widgets/custom_appbar.dart';
-import 'package:dinder/widgets/custom_bottombar.dart';
-import 'package:dinder/widgets/user_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/swipe/swipe_bloc.dart';
-import '../../widgets/choice_button.dart';
+import '../../widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/';
@@ -46,11 +43,11 @@ class HomeScreen extends StatelessWidget {
                         if (drag.velocity.pixelsPerSecond.dx < 0) {
                           context
                               .read<SwipeBloc>()
-                              .add(SwipeLeftEvent(user: state.users[0]));
+                              .add(SwipeLeft(user: state.users[0]));
                         } else {
                           context
                               .read<SwipeBloc>()
-                              .add(SwipeRightEvent(user: state.users[0]));
+                              .add(SwipeRight(user: state.users[0]));
                         }
                       },
                       child: UserCard(
@@ -68,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                           onTap: () {
                             context
                                 .read<SwipeBloc>()
-                                .add(SwipeLeftEvent(user: state.users[0]));
+                                .add(SwipeLeft(user: state.users[0]));
                           },
                           child: ChoiceButton(
                             width: 60,
@@ -83,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                           onTap: () {
                             context
                                 .read<SwipeBloc>()
-                                .add(SwipeRightEvent(user: state.users[0]));
+                                .add(SwipeRight(user: state.users[0]));
                           },
                           child: ChoiceButton(
                             width: 60,

@@ -40,12 +40,11 @@ dependencies:
   carousel_slider: ^4.0.0-nullsafety.0
   intl: ^0.18.1
   step_progress_indicator: ^1.0.0
-  # image_picker_ios: ^0.8.4
   firebase_core: ^2.15.1
   firebase_auth: ^4.8.0
   image_picker: ^1.0.2
-  # firebase_storage: ^10.0.3
-  # cloud_firestore: ^2.5.3
+  firebase_storage: ^11.2.6
+  cloud_firestore: ^4.9.0
   uuid: ^3.0.5
   logger: ^2.0.1
 

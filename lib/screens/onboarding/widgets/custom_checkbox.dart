@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
 
-class CustomCheckBox extends StatelessWidget {
+class CustomCheckbox extends StatelessWidget {
   final String text;
+  final bool value;
+  final Function(bool?)? onChanged;
 
-  const CustomCheckBox({
-    super.key,
+  const CustomCheckbox({
+    Key? key,
     required this.text,
-  });
+    required this.value,
+    required this.onChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Checkbox(
-          value: false,
-          onChanged: (bool? newValue) {},
+          value: value,
+          onChanged: onChanged,
         ),
         Text(
           text,
           style: Theme.of(context)
               .textTheme
-              .headlineLarge
-              ?.copyWith(fontWeight: FontWeight.normal),
-        )
+              .headlineLarge!
+              .copyWith(fontWeight: FontWeight.normal),
+        ),
       ],
     );
   }

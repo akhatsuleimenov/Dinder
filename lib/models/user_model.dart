@@ -1,12 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
-  final int id;
+  final String? id;
   final String name;
   final int age;
   final String gender;
-  final List<String> imageUrls;
-  final List<String> interests;
+  final List<dynamic> imageUrls;
+  final List<dynamic> interests;
   final String bio;
   final String major;
   final bool giver;
@@ -27,9 +28,61 @@ class User extends Equatable {
   List<Object?> get props =>
       [id, name, age, gender, imageUrls, bio, major, giver];
 
+  static User fromSnapshot(DocumentSnapshot snap) {
+    User user = User(
+      id: snap.id,
+      name: snap['name'],
+      age: snap['age'],
+      gender: snap['gender'],
+      imageUrls: snap['imageUrls'],
+      bio: snap['bio'],
+      interests: snap['interests'],
+      major: snap['major'],
+      giver: snap['giver'],
+    );
+    return user;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'age': age,
+      'gender': gender,
+      'imageUrls': imageUrls,
+      'interests': interests,
+      'bio': bio,
+      'major': major,
+      'giver': giver,
+    };
+  }
+
+  User copyWith({
+    String? id,
+    String? name,
+    int? age,
+    String? gender,
+    List<dynamic>? imageUrls,
+    List<dynamic>? interests,
+    String? bio,
+    String? major,
+    bool? giver,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      age: age ?? this.age,
+      gender: gender ?? this.gender,
+      imageUrls: imageUrls ?? this.imageUrls,
+      interests: interests ?? this.interests,
+      bio: bio ?? this.bio,
+      major: major ?? this.major,
+      giver: giver ?? this.giver,
+    );
+  }
+
   static List<User> users = [
     const User(
-      id: 1,
+      id: '1',
       name: 'John',
       age: 25,
       gender: 'Male',
@@ -47,7 +100,7 @@ class User extends Equatable {
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
     const User(
-      id: 2,
+      id: '2',
       name: 'Tamara',
       age: 30,
       gender: 'Female',
@@ -65,7 +118,7 @@ class User extends Equatable {
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
     const User(
-      id: 3,
+      id: '3',
       name: 'Marta',
       age: 35,
       gender: 'Female',
@@ -83,7 +136,7 @@ class User extends Equatable {
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
     User(
-      id: 4,
+      id: '4',
       name: 'Sara',
       age: 30,
       gender: 'Female',
@@ -101,7 +154,7 @@ class User extends Equatable {
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
     User(
-      id: 5,
+      id: '5',
       name: 'Anna',
       age: 35,
       gender: 'Female',
@@ -119,7 +172,7 @@ class User extends Equatable {
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
     User(
-      id: 6,
+      id: '6',
       name: 'Lisa',
       age: 35,
       gender: 'Female',
@@ -137,7 +190,7 @@ class User extends Equatable {
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
     User(
-      id: 7,
+      id: '7',
       name: 'Luisa',
       age: 35,
       gender: 'Female',
@@ -155,7 +208,7 @@ class User extends Equatable {
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
     User(
-      id: 8,
+      id: '8',
       name: 'Sara',
       age: 35,
       gender: 'Female',
@@ -173,7 +226,7 @@ class User extends Equatable {
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
     User(
-      id: 9,
+      id: '9',
       name: 'Andrea',
       age: 35,
       gender: 'Female',
@@ -191,7 +244,7 @@ class User extends Equatable {
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
     User(
-      id: 10,
+      id: '10',
       name: 'Mary',
       age: 35,
       gender: 'Female',
