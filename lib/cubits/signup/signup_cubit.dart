@@ -1,12 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
-import '../../repositories/auth/auth_repository.dart';
+import '/repositories/repositories.dart';
 
 part 'signup_state.dart';
 
 class SignupCubit extends Cubit<SignupState> {
   final AuthRepository _authRepository;
+
   SignupCubit({required AuthRepository authRepository})
       : _authRepository = authRepository,
         super(SignupState.initial());
@@ -19,12 +21,15 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(password: value, status: SignupStatus.initial));
   }
 
-  void signupWithCredentials() async {
-    if (!state.isValid) return;
+  Future<void> signUpWithCredentials() async {
+    if (!state.isFormValid || state.status == SignupStatus.submitting) return;
+    emit(state.copyWith(status: SignupStatus.submitting));
     try {
-      await _authRepository.signUp(
-          email: state.email, password: state.password);
-      emit(state.copyWith(status: SignupStatus.success));
+      var user = await _authRepository.signUp(
+        email: state.email,
+        password: state.password,
+      );
+      emit(state.copyWith(status: SignupStatus.success, user: user));
     } catch (_) {}
   }
 }

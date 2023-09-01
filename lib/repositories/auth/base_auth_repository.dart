@@ -6,4 +6,5 @@ abstract class BaseAuthrepository {
     required String email,
     required String password,
   });
+  Future<void> signOut();
 }

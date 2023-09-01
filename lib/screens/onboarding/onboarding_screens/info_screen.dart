@@ -71,7 +71,7 @@ class Info extends StatelessWidget {
                   children: [
                     StepProgressIndicator(
                       totalSteps: 6,
-                      currentStep: 4,
+                      currentStep: 3,
                       selectedColor: Theme.of(context).focusColor,
                       unselectedColor: Theme.of(context).primaryColor,
                     ),

@@ -5,18 +5,13 @@ import '../screens/screens.dart';
 
 class AppRouter {
   static Route onGenerateRoute(RouteSettings settings) {
-    // print('The Route is: ${settings.name}');
-
-    // print(settings);
     switch (settings.name) {
       case '/':
         return HomeScreen.route();
       case UsersScreen.routeName:
         return UsersScreen.route(user: settings.arguments as User);
-      // case SplashScreen.routeName:
-      //   return SplashScreen.route();
-      // case UsersScreen.routeName:
-      //   return UsersScreen.route(user: settings.arguments as User);
+      case SplashScreen.routeName:
+        return SplashScreen.route();
       case OnboardingScreen.routeName:
         return OnboardingScreen.route();
       case MatchesScreen.routeName:

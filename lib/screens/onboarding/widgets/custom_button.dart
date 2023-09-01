@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 
-import '../../../cubits/signup/signup_cubit.dart';
+import '/models/user_model.dart';
+import '/blocs/blocs.dart';
+import '/cubits/cubits.dart';
 
 class CustomButton extends StatelessWidget {
   final TabController tabController;
@@ -16,7 +17,6 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var logger = Logger();
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5.0),
@@ -28,11 +28,30 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
             elevation: 0, backgroundColor: Colors.transparent),
-        onPressed: () {
-          tabController.animateTo(tabController.index + 1);
+        onPressed: () async {
+          if (tabController.index == 4) {
+            Navigator.pushNamed(context, '/');
+          } else {
+            tabController.animateTo(tabController.index + 1);
+          }
           if (tabController.index == 2) {
-            context.read<SignupCubit>().signupWithCredentials();
-            logger.i("signuped");
+            await context.read<SignupCubit>().signUpWithCredentials();
+            User user = User(
+              id: context.read<SignupCubit>().state.user!.uid,
+              name: '',
+              age: 0,
+              gender: '',
+              imageUrls: [],
+              major: '',
+              interests: [],
+              bio: '',
+              giver: false,
+            );
+            context.read<OnboardingBloc>().add(
+                  StartOnboarding(
+                    user: user,
+                  ),
+                );
           }
         },
         child: SizedBox(

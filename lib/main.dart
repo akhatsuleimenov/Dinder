@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/blocs.dart';
-// import 'cubits/cubits.dart';
+import 'cubits/cubits.dart';
 import 'repositories/repositories.dart';
 import 'config/theme.dart';
 import 'config/app_router.dart';
@@ -22,22 +22,47 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (_) => AuthRepository(),
+          create: (context) => AuthRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => DatabaseRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => StorageRepository(),
         )
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => AuthBloc(
+            create: (context) => AuthBloc(
               authRepository: context.read<AuthRepository>(),
             ),
           ),
           BlocProvider(
-            create: (_) => SwipeBloc()
+            create: (context) => SwipeBloc()
               ..add(
                 LoadUsers(
-                  users: User.users.where((user) => user.id != 1).toList(),
+                  users: User.users.where((user) => user.id != '1').toList(),
                 ),
+              ),
+          ),
+          BlocProvider<SignupCubit>(
+            create: (context) =>
+                SignupCubit(authRepository: context.read<AuthRepository>()),
+          ),
+          BlocProvider<OnboardingBloc>(
+            create: (context) => OnboardingBloc(
+              databaseRepository: context.read<DatabaseRepository>(),
+              storageRepository: context.read<StorageRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => ProfileBloc(
+              authBloc: BlocProvider.of<AuthBloc>(context),
+              databaseRepository: context.read<DatabaseRepository>(),
+            )..add(
+                LoadProfile(
+                    userId: BlocProvider.of<AuthBloc>(context).state.user!.uid),
               ),
           ),
         ],
