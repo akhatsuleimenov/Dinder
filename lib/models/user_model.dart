@@ -11,9 +11,12 @@ class User extends Equatable {
   final String bio;
   final String major;
   final bool giver;
+  final List<String>? swipeLeft;
+  final List<String>? swipeRight;
+  final List<String>? matches;
 
   const User({
-    required this.id,
+    this.id,
     required this.name,
     required this.age,
     required this.gender,
@@ -22,11 +25,25 @@ class User extends Equatable {
     required this.interests,
     required this.major,
     required this.giver,
+    this.swipeLeft,
+    this.swipeRight,
+    this.matches,
   });
 
   @override
-  List<Object?> get props =>
-      [id, name, age, gender, imageUrls, bio, major, giver];
+  List<Object?> get props => [
+        id,
+        name,
+        age,
+        gender,
+        imageUrls,
+        bio,
+        major,
+        giver,
+        swipeLeft,
+        swipeRight,
+        matches
+      ];
 
   static User fromSnapshot(DocumentSnapshot snap) {
     User user = User(
@@ -39,6 +56,15 @@ class User extends Equatable {
       interests: snap['interests'],
       major: snap['major'],
       giver: snap['giver'],
+      swipeLeft: (snap['swipeLeft'] as List)
+          .map((swipeLeft) => swipeLeft as String)
+          .toList(),
+      swipeRight: (snap['swipeRight'] as List)
+          .map((swipeRight) => swipeRight as String)
+          .toList(),
+      matches: (snap['matches'] as List)
+          .map((matches) => matches as String)
+          .toList(),
     );
     return user;
   }
@@ -53,6 +79,9 @@ class User extends Equatable {
       'bio': bio,
       'major': major,
       'giver': giver,
+      'swipeLeft': swipeLeft,
+      'swipeRight': swipeRight,
+      'matches': matches,
     };
   }
 
@@ -66,6 +95,9 @@ class User extends Equatable {
     String? bio,
     String? major,
     bool? giver,
+    List<String>? swipeLeft,
+    List<String>? swipeRight,
+    List<String>? matches,
   }) {
     return User(
       id: id ?? this.id,

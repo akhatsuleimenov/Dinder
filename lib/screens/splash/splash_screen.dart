@@ -27,9 +27,8 @@ class SplashScreen extends StatelessWidget {
           if (state.status == AuthStatus.unauthenticated) {
             Timer(
               Duration(seconds: 1),
-              () => Navigator.of(context).pushNamedAndRemoveUntil(
-                OnboardingScreen.routeName,
-                ModalRoute.withName('/onboarding'),
+              () => Navigator.of(context).pushNamed(
+                LoginScreen.routeName,
               ),
             );
           } else if (state.status == AuthStatus.authenticated) {

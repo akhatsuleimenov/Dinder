@@ -15,7 +15,7 @@ class Info extends StatelessWidget {
     return BlocBuilder<OnboardingBloc, OnboardingState>(
       builder: (context, state) {
         if (state is OnboardingLoading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
@@ -26,7 +26,19 @@ class Info extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  CustomTextHeader(text: 'What\'s Your Gender?'),
+                  const CustomTextHeader(text: 'What\'s Your Name?'),
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    hint: 'ENTER YOUR NAME',
+                    onChanged: (value) {
+                      context.read<OnboardingBloc>().add(
+                            UpdateUser(
+                              user: state.user.copyWith(name: value),
+                            ),
+                          );
+                    },
+                  ),
+                  const CustomTextHeader(text: 'What\'s Your Gender?'),
                   const SizedBox(
                     height: 10,
                   ),
@@ -66,6 +78,32 @@ class Info extends StatelessWidget {
                           );
                     },
                   ),
+                  const CustomTextHeader(text: 'Are you a giver or receiver?'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomCheckbox(
+                    text: 'GIVER',
+                    value: state.user.giver == true,
+                    onChanged: (bool? newValue) {
+                      context.read<OnboardingBloc>().add(
+                            UpdateUser(
+                              user: state.user.copyWith(giver: true),
+                            ),
+                          );
+                    },
+                  ),
+                  CustomCheckbox(
+                    text: 'RECEIVER',
+                    value: state.user.giver == false,
+                    onChanged: (bool? newValue) {
+                      context.read<OnboardingBloc>().add(
+                            UpdateUser(
+                              user: state.user.copyWith(giver: false),
+                            ),
+                          );
+                    },
+                  ),
                 ]),
                 Column(
                   children: [
@@ -86,7 +124,7 @@ class Info extends StatelessWidget {
             ),
           );
         } else {
-          return Text("error");
+          return const Text("error");
         }
       },
     );

@@ -1,3 +1,4 @@
+import 'package:dinder/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../models/models.dart';
@@ -20,6 +21,8 @@ class AppRouter {
         return ProfileScreen.route();
       case ChatScreen.routeName:
         return ChatScreen.route();
+      case LoginScreen.routeName:
+        return LoginScreen.route();
       default:
         return _errorRoute();
     }

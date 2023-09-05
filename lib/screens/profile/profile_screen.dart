@@ -47,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
                         gradient: LinearGradient(
                           colors: [
                             Theme.of(context).primaryColor.withOpacity(0.1),
-                            Theme.of(context).primaryColor.withOpacity(0.9),
+                            Theme.of(context).focusColor.withOpacity(0.5),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -110,20 +110,21 @@ class ProfileScreen extends StatelessWidget {
                           ],
                         ),
                         TextButton(
-                            onPressed: () {
-                              RepositoryProvider.of<AuthRepository>(context)
-                                  .signOut();
-                            },
-                            child: Center(
-                              child: Text(
-                                'Sign Out',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                        color: Theme.of(context).primaryColor),
-                              ),
-                            ))
+                          onPressed: () {
+                            RepositoryProvider.of<AuthRepository>(context)
+                                .signOut();
+                          },
+                          child: Center(
+                            child: Text(
+                              'Sign Out',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context).primaryColor),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   )

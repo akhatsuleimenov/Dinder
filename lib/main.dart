@@ -7,16 +7,17 @@ import 'cubits/cubits.dart';
 import 'repositories/repositories.dart';
 import 'config/theme.dart';
 import 'config/app_router.dart';
-import 'models/models.dart';
 import 'screens/screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Start Firebase
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -35,20 +36,23 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => AuthBloc(
+              databaseRepository: context.read<DatabaseRepository>(),
               authRepository: context.read<AuthRepository>(),
             ),
           ),
           BlocProvider(
-            create: (context) => SwipeBloc()
-              ..add(
-                LoadUsers(
-                  users: User.users.where((user) => user.id != '1').toList(),
-                ),
-              ),
+            create: (context) => SwipeBloc(
+              authBloc: context.read<AuthBloc>(),
+              databaseRepository: context.read<DatabaseRepository>(),
+            ),
           ),
           BlocProvider<SignupCubit>(
             create: (context) =>
                 SignupCubit(authRepository: context.read<AuthRepository>()),
+          ),
+          BlocProvider<LoginCubit>(
+            create: (context) =>
+                LoginCubit(authRepository: context.read<AuthRepository>()),
           ),
           BlocProvider<OnboardingBloc>(
             create: (context) => OnboardingBloc(
@@ -62,7 +66,8 @@ class MyApp extends StatelessWidget {
               databaseRepository: context.read<DatabaseRepository>(),
             )..add(
                 LoadProfile(
-                    userId: BlocProvider.of<AuthBloc>(context).state.user!.uid),
+                    userId:
+                        BlocProvider.of<AuthBloc>(context).state.authUser!.uid),
               ),
           ),
         ],
@@ -71,7 +76,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: theme(),
           onGenerateRoute: AppRouter.onGenerateRoute,
-          initialRoute: OnboardingScreen.routeName,
+          initialRoute: LoginScreen.routeName,
         ),
       ),
     );
