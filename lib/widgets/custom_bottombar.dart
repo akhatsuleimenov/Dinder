@@ -7,7 +7,7 @@ class CustomBottomBar extends StatelessWidget {
 
   static const mapping = {
     0: '/',
-    1: '/chat',
+    1: '/matches',
     2: '/profile',
   };
 

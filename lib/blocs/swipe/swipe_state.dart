@@ -12,7 +12,7 @@ class SwipeLoading extends SwipeState {}
 class SwipeLoaded extends SwipeState {
   final List<User> users;
 
-  SwipeLoaded({
+  const SwipeLoaded({
     required this.users,
   });
 
@@ -23,7 +23,7 @@ class SwipeLoaded extends SwipeState {
 class SwipeMatched extends SwipeState {
   final User user;
 
-  SwipeMatched({
+  const SwipeMatched({
     required this.user,
   });
 

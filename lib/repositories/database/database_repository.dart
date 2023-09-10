@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '/repositories/repositories.dart';
 import '/models/models.dart';
@@ -18,22 +19,18 @@ class DatabaseRepository extends BaseDatabaseRepository {
 
   @override
   Stream<List<User>> getUsers(User user) {
-    List<String> userFilter = List.from(user.swipeLeft!)
-      ..addAll(user.swipeRight!)
-      ..add(user.id!);
-    print(userFilter);
-    print(user.id);
-
-    print('getUsers');
+    print("Calling getUsers");
     return _firebaseFirestore
         .collection('users')
-        .where('gender', isEqualTo: 'Female')
-        .where(FieldPath.documentId, whereNotIn: userFilter)
+        .where('gender', isEqualTo: _selectGender(user))
         .snapshots()
         .map((snap) {
-      print('getUsers end');
       return snap.docs.map((doc) => User.fromSnapshot(doc)).toList();
     });
+  }
+
+  _selectGender(User user) {
+    return (user.gender == 'Female') ? 'Male' : 'Female';
   }
 
   @override
@@ -42,7 +39,7 @@ class DatabaseRepository extends BaseDatabaseRepository {
     String matchId,
     bool isSwipeRight,
   ) async {
-    print('updateUserSwipe');
+    print('Calling UpdateUserSwipe');
     if (isSwipeRight) {
       await _firebaseFirestore.collection('users').doc(userId).update({
         'swipeRight': FieldValue.arrayUnion([matchId])
@@ -59,6 +56,7 @@ class DatabaseRepository extends BaseDatabaseRepository {
     String userId,
     String matchId,
   ) async {
+    print("Calling updateUserMatch");
     // Add the match into the current user document.
     await _firebaseFirestore.collection('users').doc(userId).update({
       'matches': FieldValue.arrayUnion([matchId])
@@ -71,13 +69,13 @@ class DatabaseRepository extends BaseDatabaseRepository {
 
   @override
   Future<void> createUser(User user) async {
-    print('CreateUSer');
+    print('Calling CreateUSer');
     await _firebaseFirestore.collection('users').doc(user.id).set(user.toMap());
   }
 
   @override
   Future<void> updateUser(User user) async {
-    print('updateUser');
+    print('Calling UpdateUser');
     return _firebaseFirestore
         .collection('users')
         .doc(user.id)
@@ -89,12 +87,55 @@ class DatabaseRepository extends BaseDatabaseRepository {
 
   @override
   Future<void> updateUserPictures(User user, String imageName) async {
-    print('updateUserPictures');
+    print('Calling UpdateUserPictures');
     String downloadUrl =
         await StorageRepository().getDownloadURL(user, imageName);
 
     return _firebaseFirestore.collection('users').doc(user.id).update({
       'imageUrls': FieldValue.arrayUnion([downloadUrl])
     });
+  }
+
+  @override
+  Stream<List<Match>> getMatches(User user) {
+    return Rx.combineLatest2(
+      getUser(user.id!),
+      getUsers(user),
+      (
+        User currentUser,
+        List<User> users,
+      ) {
+        return users
+            .where((user) => currentUser.matches!.contains(user.id))
+            .map((user) => Match(userId: user.id!, matchedUser: user))
+            .toList();
+      },
+    );
+  }
+
+  @override
+  Stream<List<User>> getUsersToSwipe(User user) {
+    return Rx.combineLatest2(
+      getUser(user.id!),
+      getUsers(user),
+      (
+        User currentUser,
+        List<User> users,
+      ) {
+        return users.where(
+          (user) {
+            if (currentUser.swipeLeft!.contains(user.id)) {
+              return false;
+            } else if (currentUser.swipeRight!.contains(user.id)) {
+              return false;
+            } else if (currentUser.matches!.contains(user.id)) {
+              return false;
+            } else {
+              return true;
+            }
+          },
+        ).toList();
+      },
+    );
   }
 }

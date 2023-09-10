@@ -47,6 +47,7 @@ dependencies:
   cloud_firestore: ^4.9.0
   uuid: ^3.0.5
   logger: ^2.0.1
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:

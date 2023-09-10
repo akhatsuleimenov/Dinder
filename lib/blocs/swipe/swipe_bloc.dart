@@ -30,7 +30,6 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
       if (state.status == AuthStatus.authenticated) {
         print('Auth Subscription: Loading Users');
         add(LoadUsers(user: state.user!));
-        print('Auth Subscription: Loaded Users');
       }
     });
   }
@@ -39,11 +38,9 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
     LoadUsers event,
     Emitter<SwipeState> emit,
   ) {
-    print('Loading users1');
-    _databaseRepository.getUsers(event.user!).listen((users) {
-      print('Loading users2: $users');
+    print('Loading users');
+    _databaseRepository.getUsersToSwipe(event.user!).listen((users) {
       add(UpdateHome(users: users));
-      print('Loaded users3: $users');
     });
   }
 
@@ -53,8 +50,10 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
   ) {
     print('Updating Home');
     if (event.users!.isNotEmpty) {
+      print('SwipeLoaded');
       emit(SwipeLoaded(users: event.users!));
     } else {
+      print('SwipeError');
       emit(SwipeError());
     }
   }

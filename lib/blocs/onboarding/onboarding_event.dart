@@ -19,7 +19,7 @@ class StartOnboarding extends OnboardingEvent {
         imageUrls: [],
         interests: [],
         bio: '',
-        giver: false,
+        giver: '',
         major: '',
       )});
 

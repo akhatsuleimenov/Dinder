@@ -10,8 +10,11 @@ import 'config/app_router.dart';
 import 'screens/screens.dart';
 
 void main() async {
+  print("start Firebase");
   WidgetsFlutterBinding.ensureInitialized(); // Start Firebase
+  print("mid Firebase");
   await Firebase.initializeApp();
+  print("Firebase initialized");
   runApp(const MyApp());
 }
 
@@ -76,7 +79,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: theme(),
           onGenerateRoute: AppRouter.onGenerateRoute,
-          initialRoute: LoginScreen.routeName,
+          initialRoute: HomeScreen.routeName,
         ),
       ),
     );

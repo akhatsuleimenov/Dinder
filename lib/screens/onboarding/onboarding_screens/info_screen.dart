@@ -27,7 +27,7 @@ class Info extends StatelessWidget {
               children: [
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const CustomTextHeader(text: 'What\'s Your Name?'),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   CustomTextField(
                     hint: 'ENTER YOUR NAME',
                     onChanged: (value) {
@@ -39,9 +39,7 @@ class Info extends StatelessWidget {
                     },
                   ),
                   const CustomTextHeader(text: 'What\'s Your Gender?'),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   CustomCheckbox(
                     text: 'MALE',
                     value: state.user.gender == 'Male',
@@ -64,10 +62,8 @@ class Info extends StatelessWidget {
                           );
                     },
                   ),
-                  const SizedBox(
-                    height: 100,
-                  ),
                   const CustomTextHeader(text: 'What\'s Your Age?'),
+                  const SizedBox(height: 10),
                   CustomTextField(
                     hint: 'ENTER YOUR AGE',
                     onChanged: (value) {
@@ -79,27 +75,25 @@ class Info extends StatelessWidget {
                     },
                   ),
                   const CustomTextHeader(text: 'Are you a giver or receiver?'),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   CustomCheckbox(
                     text: 'GIVER',
-                    value: state.user.giver == true,
+                    value: state.user.giver == 'true',
                     onChanged: (bool? newValue) {
                       context.read<OnboardingBloc>().add(
                             UpdateUser(
-                              user: state.user.copyWith(giver: true),
+                              user: state.user.copyWith(giver: 'true'),
                             ),
                           );
                     },
                   ),
                   CustomCheckbox(
                     text: 'RECEIVER',
-                    value: state.user.giver == false,
+                    value: state.user.giver == 'false',
                     onChanged: (bool? newValue) {
                       context.read<OnboardingBloc>().add(
                             UpdateUser(
-                              user: state.user.copyWith(giver: false),
+                              user: state.user.copyWith(giver: 'false'),
                             ),
                           );
                     },

@@ -86,7 +86,7 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(
                           height: 125,
                           child: ListView.builder(
-                            itemCount: 5,
+                            itemCount: 1,
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {

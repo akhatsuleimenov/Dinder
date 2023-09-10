@@ -10,7 +10,7 @@ class User extends Equatable {
   final List<dynamic> interests;
   final String bio;
   final String major;
-  final bool giver;
+  final String giver;
   final List<String>? swipeLeft;
   final List<String>? swipeRight;
   final List<String>? matches;
@@ -56,13 +56,13 @@ class User extends Equatable {
       interests: snap['interests'],
       major: snap['major'],
       giver: snap['giver'],
-      swipeLeft: (snap['swipeLeft'] as List)
+      swipeLeft: ((snap['swipeLeft'] ?? []) as List)
           .map((swipeLeft) => swipeLeft as String)
           .toList(),
-      swipeRight: (snap['swipeRight'] as List)
+      swipeRight: ((snap['swipeRight'] ?? []) as List)
           .map((swipeRight) => swipeRight as String)
           .toList(),
-      matches: (snap['matches'] as List)
+      matches: ((snap['matches'] ?? []) as List)
           .map((matches) => matches as String)
           .toList(),
     );
@@ -94,7 +94,7 @@ class User extends Equatable {
     List<dynamic>? interests,
     String? bio,
     String? major,
-    bool? giver,
+    String? giver,
     List<String>? swipeLeft,
     List<String>? swipeRight,
     List<String>? matches,
@@ -127,7 +127,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: true,
+      giver: 'true',
       major: 'Computer Science',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
@@ -145,7 +145,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: false,
+      giver: 'false',
       major: 'Mathematics',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
@@ -163,7 +163,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: true,
+      giver: 'true',
       major: 'Biology',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
@@ -181,7 +181,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: true,
+      giver: 'true',
       major: 'Biology',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
@@ -199,7 +199,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: true,
+      giver: 'true',
       major: 'Biology',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
@@ -217,7 +217,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: true,
+      giver: 'true',
       major: 'Biology',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
@@ -235,7 +235,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: true,
+      giver: 'true',
       major: 'Biology',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
@@ -253,7 +253,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: true,
+      giver: 'true',
       major: 'Biology',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
@@ -271,7 +271,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: true,
+      giver: 'true',
       major: 'Biology',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
@@ -289,7 +289,7 @@ class User extends Equatable {
       ],
       bio:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      giver: true,
+      giver: 'true',
       major: 'Biology',
       interests: ['Music', 'Volleyball', 'Board games'],
     ),
