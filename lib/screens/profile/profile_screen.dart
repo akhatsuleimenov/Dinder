@@ -37,7 +37,11 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'PROFILE'),
+      appBar: const CustomAppBar(
+        title: 'PROFILE',
+        actionIcons: [Icons.message, Icons.settings],
+        actionRoutes: [MatchesScreen.routeName, SettingsScreen.routeName],
+      ),
       body: SingleChildScrollView(
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {

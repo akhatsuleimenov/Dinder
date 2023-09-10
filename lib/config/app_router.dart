@@ -23,6 +23,8 @@ class AppRouter {
         return ChatScreen.route();
       case LoginScreen.routeName:
         return LoginScreen.route();
+      case SettingsScreen.routeName:
+        return SettingsScreen.route();
       default:
         return _errorRoute();
     }

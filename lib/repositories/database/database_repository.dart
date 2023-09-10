@@ -22,7 +22,7 @@ class DatabaseRepository extends BaseDatabaseRepository {
     print("Calling getUsers");
     return _firebaseFirestore
         .collection('users')
-        .where('gender', isEqualTo: _selectGender(user))
+        .where('gender', whereIn: _selectGender(user))
         .snapshots()
         .map((snap) {
       return snap.docs.map((doc) => User.fromSnapshot(doc)).toList();
@@ -30,7 +30,10 @@ class DatabaseRepository extends BaseDatabaseRepository {
   }
 
   _selectGender(User user) {
-    return (user.gender == 'Female') ? 'Male' : 'Female';
+    if (user.genderPreference == null) {
+      return ['Male', 'Female'];
+    }
+    return user.genderPreference;
   }
 
   @override
@@ -124,15 +127,20 @@ class DatabaseRepository extends BaseDatabaseRepository {
       ) {
         return users.where(
           (user) {
-            if (currentUser.swipeLeft!.contains(user.id)) {
-              return false;
-            } else if (currentUser.swipeRight!.contains(user.id)) {
-              return false;
-            } else if (currentUser.matches!.contains(user.id)) {
-              return false;
-            } else {
-              return true;
-            }
+            bool isCurrentUser = user.id == currentUser.id;
+            bool wasSwipedLeft = currentUser.swipeLeft!.contains(user.id);
+            bool wasSwipedRight = currentUser.swipeRight!.contains(user.id);
+            bool isMatch = currentUser.matches!.contains(user.id);
+            bool isWithinAgeRange =
+                user.age >= currentUser.ageRangePreference![0] &&
+                    user.age <= currentUser.ageRangePreference![1];
+
+            if (isCurrentUser ||
+                wasSwipedLeft ||
+                wasSwipedRight ||
+                isMatch ||
+                !isWithinAgeRange) return false;
+            return true;
           },
         ).toList();
       },

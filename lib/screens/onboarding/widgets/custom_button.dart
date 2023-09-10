@@ -49,6 +49,8 @@ class CustomButton extends StatelessWidget {
               swipeLeft: [],
               swipeRight: [],
               matches: [],
+              ageRangePreference: [18, 24],
+              genderPreference: ['Female'],
             );
             context.read<OnboardingBloc>().add(
                   StartOnboarding(

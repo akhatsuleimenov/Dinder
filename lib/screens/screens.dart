@@ -6,3 +6,4 @@ export 'chat/chat_screen.dart';
 export 'onboarding/onboarding_screen.dart';
 export 'profile/profile_screen.dart';
 export 'login/login_screen.dart';
+export 'settings/settings.dart';
