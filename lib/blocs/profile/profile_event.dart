@@ -4,7 +4,7 @@ abstract class ProfileEvent extends Equatable {
   const ProfileEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoadProfile extends ProfileEvent {
@@ -13,14 +13,32 @@ class LoadProfile extends ProfileEvent {
   const LoadProfile({required this.userId});
 
   @override
-  List<Object> get props => [userId];
+  List<Object?> get props => [userId];
 }
 
-class UpdateProfile extends ProfileEvent {
-  final User user;
+class EditProfile extends ProfileEvent {
+  final bool isEditingOn;
 
-  const UpdateProfile({required this.user});
+  const EditProfile({required this.isEditingOn});
 
   @override
-  List<Object> get props => [user];
+  List<Object?> get props => [isEditingOn];
+}
+
+class SaveProfile extends ProfileEvent {
+  final User user;
+
+  const SaveProfile({required this.user});
+
+  @override
+  List<Object?> get props => [user];
+}
+
+class UpdateUserProfile extends ProfileEvent {
+  final User user;
+
+  const UpdateUserProfile({required this.user});
+
+  @override
+  List<Object?> get props => [user];
 }

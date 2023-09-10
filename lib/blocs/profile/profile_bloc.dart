@@ -22,11 +22,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         _databaseRepository = databaseRepository,
         super(ProfileLoading()) {
     on<LoadProfile>(_onLoadProfile);
-    on<UpdateProfile>(_onUpdateProfile);
+    on<EditProfile>(_onEditProfile);
+    on<SaveProfile>(_onSaveProfile);
+    on<UpdateUserProfile>(_onUpdateUserProfile);
 
     _authSubscription = _authBloc.stream.listen((state) {
       if (state.user is AuthUserChanged) {
         if (state.user != null) {
+          print('Loading User Profile');
           add(LoadProfile(userId: state.authUser!.uid));
         }
       }
@@ -36,19 +39,56 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   void _onLoadProfile(
     LoadProfile event,
     Emitter<ProfileState> emit,
-  ) {
-    _databaseRepository.getUser(event.userId).listen((user) {
-      add(
-        UpdateProfile(user: user),
-      );
-    });
+  ) async {
+    print('_onLoadProfile');
+    User user = await _databaseRepository.getUser(event.userId).first;
+    emit(ProfileLoaded(user: user));
   }
 
-  void _onUpdateProfile(
-    UpdateProfile event,
+  void _onEditProfile(
+    EditProfile event,
     Emitter<ProfileState> emit,
   ) {
-    emit(ProfileLoaded(user: event.user));
+    print('_onEditProfile');
+    if (state is ProfileLoaded) {
+      emit(
+        ProfileLoaded(
+          user: (state as ProfileLoaded).user,
+          isEditingOn: event.isEditingOn,
+        ),
+      );
+    }
+  }
+
+  void _onSaveProfile(
+    SaveProfile event,
+    Emitter<ProfileState> emit,
+  ) {
+    print('_onSaveProfile');
+    if (state is ProfileLoaded) {
+      _databaseRepository.updateUser((state as ProfileLoaded).user);
+      emit(
+        ProfileLoaded(
+          user: (state as ProfileLoaded).user,
+          isEditingOn: false,
+        ),
+      );
+    }
+  }
+
+  void _onUpdateUserProfile(
+    UpdateUserProfile event,
+    Emitter<ProfileState> emit,
+  ) {
+    print('_onUpdateUserProfile');
+    if (state is ProfileLoaded) {
+      emit(
+        ProfileLoaded(
+          user: event.user,
+          isEditingOn: (state as ProfileLoaded).isEditingOn,
+        ),
+      );
+    }
   }
 
   @override
