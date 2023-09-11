@@ -34,6 +34,23 @@ class User extends Equatable {
     this.ageRangePreference,
   });
 
+  static const User empty = User(
+    id: '',
+    name: '',
+    age: 0,
+    gender: '',
+    imageUrls: [],
+    major: '',
+    interests: [],
+    bio: '',
+    giver: 'false',
+    swipeLeft: [],
+    swipeRight: [],
+    matches: [],
+    ageRangePreference: [18, 24],
+    genderPreference: ['Female'],
+  );
+
   @override
   List<Object?> get props => [
         id,

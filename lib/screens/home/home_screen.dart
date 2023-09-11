@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/repositories/repositories.dart';
+import '/screens/screens.dart';
 import '/blocs/blocs.dart';
 import '/widgets/widgets.dart';
 
@@ -12,7 +14,19 @@ class HomeScreen extends StatelessWidget {
   static Route route() {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => HomeScreen(),
+      builder: (context) {
+        print(BlocProvider.of<AuthBloc>(context).state.status);
+        return BlocProvider.of<AuthBloc>(context).state.status ==
+                AuthStatus.unauthenticated
+            ? const LoginScreen()
+            : BlocProvider<SwipeBloc>(
+                create: (context) => SwipeBloc(
+                  authBloc: context.read<AuthBloc>(),
+                  databaseRepository: context.read<DatabaseRepository>(),
+                )..add(LoadUsers()),
+                child: const HomeScreen(),
+              );
+      },
     );
   }
 
@@ -21,8 +35,8 @@ class HomeScreen extends StatelessWidget {
     return BlocBuilder<SwipeBloc, SwipeState>(
       builder: (context, state) {
         if (state is SwipeLoading) {
-          return Scaffold(
-              appBar: const CustomAppBar(
+          return const Scaffold(
+              appBar: CustomAppBar(
                 title: 'Home',
               ),
               bottomNavigationBar: CustomBottomBar(),
@@ -38,7 +52,7 @@ class HomeScreen extends StatelessWidget {
             appBar: const CustomAppBar(
               title: 'Home',
             ),
-            bottomNavigationBar: CustomBottomBar(),
+            bottomNavigationBar: const CustomBottomBar(),
             body: Center(
               child: Text(
                 'No more users',
@@ -47,8 +61,8 @@ class HomeScreen extends StatelessWidget {
             ),
           );
         } else {
-          return Scaffold(
-            appBar: const CustomAppBar(
+          return const Scaffold(
+            appBar: CustomAppBar(
               title: 'Home',
             ),
             bottomNavigationBar: CustomBottomBar(),
@@ -74,7 +88,7 @@ class SwipeLoadedHomeScreen extends StatelessWidget {
       appBar: const CustomAppBar(
         title: 'Home',
       ),
-      bottomNavigationBar: CustomBottomBar(),
+      bottomNavigationBar: const CustomBottomBar(),
       body: Column(
         children: [
           InkWell(
@@ -128,7 +142,7 @@ class SwipeLoadedHomeScreen extends StatelessWidget {
                         .read<SwipeBloc>()
                         .add(SwipeRight(user: state.users[0]));
                   },
-                  child: ChoiceButton(
+                  child: const ChoiceButton(
                     width: 60,
                     height: 60,
                     size: 30,
@@ -225,11 +239,7 @@ class SwipeMatchedHomeScreen extends StatelessWidget {
               text: 'BACK TO SWIPING',
               textColor: Colors.white,
               onPressed: () {
-                context.read<SwipeBloc>().add(
-                      LoadUsers(
-                        user: context.read<AuthBloc>().state.user,
-                      ),
-                    );
+                context.read<SwipeBloc>().add(LoadUsers());
               },
               beginColor: Theme.of(context).focusColor,
               endColor: Theme.of(context).primaryColor,

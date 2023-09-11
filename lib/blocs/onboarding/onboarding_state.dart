@@ -11,9 +11,10 @@ class OnboardingLoading extends OnboardingState {}
 
 class OnboardingLoaded extends OnboardingState {
   final User user;
+  final TabController tabController;
 
-  OnboardingLoaded({required this.user});
+  const OnboardingLoaded({required this.user, required this.tabController});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, tabController];
 }

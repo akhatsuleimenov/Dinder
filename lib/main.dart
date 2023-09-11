@@ -43,25 +43,9 @@ class MyApp extends StatelessWidget {
               authRepository: context.read<AuthRepository>(),
             ),
           ),
-          BlocProvider(
-            create: (context) => SwipeBloc(
-              authBloc: context.read<AuthBloc>(),
-              databaseRepository: context.read<DatabaseRepository>(),
-            ),
-          ),
-          BlocProvider<SignupCubit>(
-            create: (context) =>
-                SignupCubit(authRepository: context.read<AuthRepository>()),
-          ),
           BlocProvider<LoginCubit>(
             create: (context) =>
                 LoginCubit(authRepository: context.read<AuthRepository>()),
-          ),
-          BlocProvider<OnboardingBloc>(
-            create: (context) => OnboardingBloc(
-              databaseRepository: context.read<DatabaseRepository>(),
-              storageRepository: context.read<StorageRepository>(),
-            ),
           ),
           BlocProvider(
             create: (context) => ProfileBloc(
@@ -79,7 +63,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: theme(),
           onGenerateRoute: AppRouter.onGenerateRoute,
-          initialRoute: HomeScreen.routeName,
+          initialRoute: OnboardingScreen.routeName,
         ),
       ),
     );

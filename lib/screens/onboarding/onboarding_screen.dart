@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
-import '/widgets/widgets.dart';
+import '/blocs/blocs.dart';
+import '/cubits/cubits.dart';
+import '/repositories/repositories.dart';
 import 'onboarding_screens/screens.dart';
+import 'widgets/widgets.dart';
 
 class OnboardingScreen extends StatelessWidget {
   static const String routeName = '/onboarding';
@@ -11,7 +16,21 @@ class OnboardingScreen extends StatelessWidget {
   static Route route() {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => OnboardingScreen(),
+      builder: (context) => MultiBlocProvider(
+        providers: [
+          BlocProvider<SignupCubit>(
+            create: (context) =>
+                SignupCubit(authRepository: context.read<AuthRepository>()),
+          ),
+          BlocProvider<OnboardingBloc>(
+            create: (context) => OnboardingBloc(
+              databaseRepository: context.read<DatabaseRepository>(),
+              storageRepository: context.read<StorageRepository>(),
+            ),
+          ),
+        ],
+        child: const OnboardingScreen(),
+      ),
     );
   }
 
@@ -29,22 +48,100 @@ class OnboardingScreen extends StatelessWidget {
       length: tabs.length,
       child: Builder(builder: (BuildContext context) {
         final TabController tabController = DefaultTabController.of(context);
+        context
+            .read<OnboardingBloc>()
+            .add(StartOnboarding(tabController: tabController));
         return Scaffold(
           appBar: const CustomAppBar(
             title: 'DINDER',
             hasActions: false,
           ),
-          body: TabBarView(
-            children: [
-              Start(tabController: tabController),
-              Email(tabController: tabController),
-              Info(tabController: tabController),
-              Pictures(tabController: tabController),
-              Bio(tabController: tabController),
-            ],
+          body: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30.0,
+              vertical: 50,
+            ),
+            child: BlocBuilder<OnboardingBloc, OnboardingState>(
+              builder: (context, state) {
+                if (state is OnboardingLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (state is OnboardingLoaded) {
+                  return TabBarView(
+                    children: [
+                      Start(state: state),
+                      Email(state: state),
+                      Bio(state: state),
+                      Pictures(state: state),
+                      Info(state: state),
+                    ],
+                  );
+                } else {
+                  return const Text('Something went wrong.');
+                }
+              },
+            ),
           ),
         );
       }),
+    );
+  }
+}
+
+class OnboardingScreenLayout extends StatelessWidget {
+  final List<Widget> children;
+  final int currentStep;
+  final void Function()? onPressed;
+
+  const OnboardingScreenLayout({
+    Key? key,
+    required this.children,
+    required this.currentStep,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: constraints.maxWidth,
+              minHeight: constraints.maxHeight,
+            ),
+            child: IntrinsicHeight(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...children,
+                  const Spacer(),
+                  SizedBox(
+                    height: 75,
+                    child: Column(
+                      children: [
+                        StepProgressIndicator(
+                          totalSteps: 6,
+                          currentStep: currentStep,
+                          selectedColor: Theme.of(context).primaryColor,
+                          unselectedColor: Theme.of(context).focusColor,
+                        ),
+                        const SizedBox(height: 10),
+                        CustomButton(
+                          text: 'NEXT STEP',
+                          onPressed: onPressed,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

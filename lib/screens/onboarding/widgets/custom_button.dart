@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '/models/user_model.dart';
-import '/blocs/blocs.dart';
-import '/cubits/cubits.dart';
 
 class CustomButton extends StatelessWidget {
-  final TabController tabController;
   final String text;
+  final void Function()? onPressed;
 
   const CustomButton({
     super.key,
-    required this.tabController,
     this.text = 'START',
+    this.onPressed,
   });
 
   @override
@@ -27,38 +22,10 @@ class CustomButton extends StatelessWidget {
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            elevation: 0, backgroundColor: Colors.transparent),
-        onPressed: () async {
-          if (tabController.index == 4) {
-            Navigator.pushNamed(context, '/');
-          } else {
-            tabController.animateTo(tabController.index + 1);
-          }
-          if (tabController.index == 2) {
-            await context.read<SignupCubit>().signUpWithCredentials();
-            User user = User(
-              id: context.read<SignupCubit>().state.user!.uid,
-              name: '',
-              age: 0,
-              gender: '',
-              imageUrls: [],
-              major: '',
-              interests: [],
-              bio: '',
-              giver: 'false',
-              swipeLeft: [],
-              swipeRight: [],
-              matches: [],
-              ageRangePreference: [18, 24],
-              genderPreference: ['Female'],
-            );
-            context.read<OnboardingBloc>().add(
-                  StartOnboarding(
-                    user: user,
-                  ),
-                );
-          }
-        },
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+        ),
+        onPressed: onPressed,
         child: SizedBox(
           width: double.infinity,
           child: Center(
