@@ -36,7 +36,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     UpdateMatches event,
     Emitter<MatchState> emit,
   ) {
-    if (event.matchedUsers.length == 0) {
+    if (event.matchedUsers.isEmpty) {
       emit(MatchUnavailable());
     } else {
       emit(MatchLoaded(matches: event.matchedUsers));

@@ -16,8 +16,8 @@ class LoginScreen extends StatelessWidget {
         builder: (context) {
           return BlocProvider.of<AuthBloc>(context).state.status ==
                   AuthStatus.unauthenticated
-              ? HomeScreen()
-              : LoginScreen();
+              ? const HomeScreen()
+              : const LoginScreen();
         });
   }
 

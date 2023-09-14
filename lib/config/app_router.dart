@@ -1,8 +1,7 @@
-import 'package:dinder/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../models/models.dart';
-import '../screens/screens.dart';
+import '/models/models.dart';
+import '/screens/screens.dart';
 
 class AppRouter {
   static Route onGenerateRoute(RouteSettings settings) {
@@ -20,7 +19,7 @@ class AppRouter {
       case ProfileScreen.routeName:
         return ProfileScreen.route();
       case ChatScreen.routeName:
-        return ChatScreen.route();
+        return ChatScreen.route(match: settings.arguments as Match);
       case LoginScreen.routeName:
         return LoginScreen.route();
       case SettingsScreen.routeName:

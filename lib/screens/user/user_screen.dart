@@ -1,6 +1,7 @@
-import '../../models/models.dart';
-import '../../widgets/widgets.dart';
 import 'package:flutter/material.dart';
+
+import '/models/models.dart';
+import '/widgets/widgets.dart';
 
 class UsersScreen extends StatelessWidget {
   final User user;
@@ -10,7 +11,7 @@ class UsersScreen extends StatelessWidget {
 
   static Route route({required User user}) {
     return MaterialPageRoute(
-        settings: RouteSettings(name: routeName),
+        settings: const RouteSettings(name: routeName),
         builder: (context) => UsersScreen(user: user));
   }
 
@@ -53,7 +54,7 @@ class UsersScreen extends StatelessWidget {
                         ChoiceButton(
                             color: Theme.of(context).primaryColor,
                             icon: Icons.clear_rounded),
-                        ChoiceButton(
+                        const ChoiceButton(
                             width: 80,
                             height: 80,
                             size: 30,
@@ -83,7 +84,7 @@ class UsersScreen extends StatelessWidget {
                       .displayMedium
                       ?.copyWith(fontWeight: FontWeight.normal),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Text(
@@ -97,35 +98,35 @@ class UsersScreen extends StatelessWidget {
                       .headlineLarge
                       ?.copyWith(height: 2, fontWeight: FontWeight.normal),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
-                Text(
-                  'Interests',
-                  style: Theme.of(context).textTheme.displayMedium,
-                ),
-                Row(
-                  children: user.interests
-                      .map((interest) => Container(
-                            padding: const EdgeInsets.all(5),
-                            margin: const EdgeInsets.only(top: 5, right: 5),
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: [
-                              Theme.of(context).focusColor,
-                              Theme.of(context).primaryColor,
-                            ])),
-                            child: Text(
-                              interest,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.white),
-                            ),
-                          ))
-                      .toList(),
-                ),
+                // Text(
+                //   'Interests',
+                //   style: Theme.of(context).textTheme.displayMedium,
+                // ),
+                // Row(
+                //   children: user.interests
+                //       .map((interest) => Container(
+                //             padding: const EdgeInsets.all(5),
+                //             margin: const EdgeInsets.only(top: 5, right: 5),
+                //             decoration: BoxDecoration(
+                //                 gradient: LinearGradient(colors: [
+                //               Theme.of(context).focusColor,
+                //               Theme.of(context).primaryColor,
+                //             ])),
+                //             child: Text(
+                //               interest,
+                //               style: Theme.of(context)
+                //                   .textTheme
+                //                   .headlineMedium
+                //                   ?.copyWith(
+                //                       fontWeight: FontWeight.normal,
+                //                       color: Colors.white),
+                //             ),
+                //           ))
+                //       .toList(),
+                // ),
               ],
             ),
           )

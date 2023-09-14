@@ -56,7 +56,7 @@ class Pictures extends StatelessWidget {
 
                         if (image == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('No image was selected.'),
                             ),
                           );

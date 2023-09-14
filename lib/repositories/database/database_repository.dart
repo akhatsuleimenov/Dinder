@@ -18,6 +18,35 @@ class DatabaseRepository extends BaseDatabaseRepository {
   }
 
   @override
+  Stream<Chat> getChat(String chatId) {
+    print('Calling getChat');
+    return _firebaseFirestore
+        .collection('chats')
+        .doc(chatId)
+        .snapshots()
+        .map((doc) {
+      return Chat.fromJson(
+        doc.data() as Map<String, dynamic>,
+        id: doc.id,
+      );
+    });
+  }
+
+  @override
+  Stream<List<Chat>> getChats(String userId) {
+    print('Calling getChats');
+    return _firebaseFirestore
+        .collection('chats')
+        .where('userIds', arrayContains: userId)
+        .snapshots()
+        .map((snap) {
+      return snap.docs
+          .map((doc) => Chat.fromJson(doc.data(), id: doc.id))
+          .toList();
+    });
+  }
+
+  @override
   Stream<List<User>> getUsers(User user) {
     print("Calling getUsers");
     return _firebaseFirestore
@@ -59,14 +88,30 @@ class DatabaseRepository extends BaseDatabaseRepository {
     String userId,
     String matchId,
   ) async {
-    print("Calling updateUserMatch");
+    print('Calling updateUserMatch');
+    // Create a document in the chat collection to store the messages.
+    String chatId = await _firebaseFirestore.collection('chats').add({
+      'userIds': [userId, matchId],
+      'messages': [],
+    }).then((value) => value.id);
+
     // Add the match into the current user document.
     await _firebaseFirestore.collection('users').doc(userId).update({
-      'matches': FieldValue.arrayUnion([matchId])
+      'matches': FieldValue.arrayUnion([
+        {
+          'matchId': matchId,
+          'chatId': chatId,
+        }
+      ])
     });
     // Add the match into the other user document.
     await _firebaseFirestore.collection('users').doc(matchId).update({
-      'matches': FieldValue.arrayUnion([userId])
+      'matches': FieldValue.arrayUnion([
+        {
+          'matchId': userId,
+          'chatId': chatId,
+        }
+      ])
     });
   }
 
@@ -101,23 +146,46 @@ class DatabaseRepository extends BaseDatabaseRepository {
 
   @override
   Stream<List<Match>> getMatches(User user) {
-    return Rx.combineLatest2(
+    print('Calling getMatches');
+    return Rx.combineLatest3(
       getUser(user.id!),
+      getChats(user.id!),
       getUsers(user),
       (
-        User currentUser,
-        List<User> users,
+        User user,
+        List<Chat> userChats,
+        List<User> otherUsers,
       ) {
-        return users
-            .where((user) => currentUser.matches!.contains(user.id))
-            .map((user) => Match(userId: user.id!, matchedUser: user))
-            .toList();
+        return otherUsers.where(
+          (otherUser) {
+            List<String> matches = user.matches!
+                .map((match) => match['matchId'] as String)
+                .toList();
+            return matches.contains(otherUser.id);
+          },
+        ).map(
+          (matchUser) {
+            Chat chat = userChats.where(
+              (chat) {
+                return chat.userIds.contains(matchUser.id) &
+                    chat.userIds.contains(user.id);
+              },
+            ).first;
+
+            return Match(
+              userId: user.id!,
+              matchUser: matchUser,
+              chat: chat,
+            );
+          },
+        ).toList();
       },
     );
   }
 
   @override
   Stream<List<User>> getUsersToSwipe(User user) {
+    print('Calling getUsersToSwipe');
     return Rx.combineLatest2(
       getUser(user.id!),
       getUsers(user),
@@ -145,5 +213,44 @@ class DatabaseRepository extends BaseDatabaseRepository {
         ).toList();
       },
     );
+  }
+
+  @override
+  Future<void> addMessage(String chatId, Message message) {
+    print('Calling addMessage');
+    return _firebaseFirestore.collection('chats').doc(chatId).update({
+      'messages': FieldValue.arrayUnion(
+        [
+          Message(
+            senderId: message.senderId,
+            receiverId: message.receiverId,
+            message: message.message,
+            dateTime: message.dateTime,
+            timeString: message.timeString,
+          ).toJson()
+        ],
+      )
+    });
+  }
+
+  @override
+  Future<void> deleteMatch(String chatId, String userId, String matchId) async {
+    print('Calling deleteMatch');
+    // Remove the match from the user document
+    await _firebaseFirestore.collection('users').doc(userId).update({
+      'matches': FieldValue.arrayRemove([
+        {'matchId': matchId, 'chatId': chatId}
+      ])
+    });
+
+    // Remove the match from the user document
+    await _firebaseFirestore.collection('users').doc(matchId).update({
+      'matches': FieldValue.arrayRemove([
+        {'matchId': userId, 'chatId': chatId}
+      ])
+    });
+
+    // Delete the chat document
+    await _firebaseFirestore.collection('chats').doc(chatId).delete();
   }
 }

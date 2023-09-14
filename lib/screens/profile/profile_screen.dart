@@ -1,11 +1,11 @@
-import 'package:dinder/screens/onboarding/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/screens/screens.dart';
-import '/repositories/repositories.dart';
+import '../onboarding/widgets/widgets.dart';
 import '/blocs/blocs.dart';
-import '../../widgets/widgets.dart';
+import '/repositories/repositories.dart';
+import '/screens/screens.dart';
+import '/widgets/widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -170,7 +170,7 @@ class ProfileScreen extends StatelessWidget {
                           },
                         ),
                         const _Pictures(),
-                        const _Interests(),
+                        // const _Interests(),
                         const _SignOut(),
                       ],
                     ),
@@ -232,35 +232,35 @@ class _TextField extends StatelessWidget {
   }
 }
 
+// class _Interests extends StatelessWidget {
+//   const _Interests({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<ProfileBloc, ProfileState>(
+//       builder: (context, state) {
+//         state as ProfileLoaded;
+//         return Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               'Interests',
+//               style: Theme.of(context).textTheme.displaySmall,
+//             ),
+//             Row(
+//               children: [
+//                 CustomTextContainer(text: state.user.interests[0]),
+//               ],
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+// }
+
 class _Pictures extends StatelessWidget {
   const _Pictures({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        state as ProfileLoaded;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Interests',
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-            Row(
-              children: [
-                CustomTextContainer(text: state.user.interests[0]),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _Interests extends StatelessWidget {
-  const _Interests({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

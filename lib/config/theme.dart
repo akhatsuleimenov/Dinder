@@ -7,6 +7,7 @@ ThemeData theme() {
     primaryColorLight: const Color(0xFFFE9AAA),
     cardColor: const Color.fromARGB(255, 37, 212, 231),
     focusColor: const Color.fromARGB(255, 106, 0, 255),
+    shadowColor: const Color(0xFFF4F4F4),
     scaffoldBackgroundColor: Colors.white,
     fontFamily: 'Optima',
     textTheme: const TextTheme(

@@ -1,4 +1,5 @@
 import 'package:dinder/repositories/repositories.dart';
+import 'package:dinder/screens/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +10,8 @@ import '/widgets/widgets.dart';
 class MatchesScreen extends StatelessWidget {
   static const String routeName = '/matches';
 
+  const MatchesScreen({super.key});
+
   static Route route() {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
@@ -16,7 +19,7 @@ class MatchesScreen extends StatelessWidget {
         create: (context) =>
             MatchBloc(databaseRepository: context.read<DatabaseRepository>())
               ..add(LoadMatches(user: context.read<AuthBloc>().state.user!)),
-        child: MatchesScreen(),
+        child: const MatchesScreen(),
       ),
     );
   }
@@ -32,10 +35,12 @@ class MatchesScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else if (state is MatchLoaded) {
-            final inactiveMatches =
-                state.matches.where((match) => match.chat == null).toList();
-            final activeMatches =
-                state.matches.where((match) => match.chat != null).toList();
+            final inactiveMatches = state.matches
+                .where((match) => match.chat.messages.isEmpty)
+                .toList();
+            final activeMatches = state.matches
+                .where((match) => match.chat.messages.isNotEmpty)
+                .toList();
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -44,7 +49,12 @@ class MatchesScreen extends StatelessWidget {
                   children: [
                     Text('Your Likes',
                         style: Theme.of(context).textTheme.displayMedium),
-                    MatchesList(inactiveMatches: inactiveMatches),
+                    inactiveMatches.isEmpty
+                        ? const Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Text("Go back to swiping"),
+                          )
+                        : MatchesList(inactiveMatches: inactiveMatches),
                     const SizedBox(height: 10),
                     Text(
                       'Your Chats',
@@ -104,8 +114,11 @@ class ChatsList extends StatelessWidget {
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/chat',
-                arguments: activeMatches[index]);
+            Navigator.pushNamed(
+              context,
+              ChatScreen.routeName,
+              arguments: activeMatches[index],
+            );
           },
           child: Row(
             children: [
@@ -113,18 +126,18 @@ class ChatsList extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 10, right: 10),
                 height: 70,
                 width: 70,
-                url: activeMatches[index].matchedUser.imageUrls[0],
+                url: activeMatches[index].matchUser.imageUrls[0],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    activeMatches[index].matchedUser.name,
+                    activeMatches[index].matchUser.name,
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    activeMatches[index].chat![0].messages[0].message,
+                    activeMatches[index].chat.messages[0].message,
                     style: Theme.of(context)
                         .textTheme
                         .headlineLarge
@@ -132,7 +145,7 @@ class ChatsList extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    activeMatches[index].chat![0].messages[0].timeString,
+                    activeMatches[index].chat.messages[0].timeString,
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ],
@@ -162,19 +175,30 @@ class MatchesList extends StatelessWidget {
           shrinkWrap: true,
           itemCount: inactiveMatches.length,
           itemBuilder: (context, index) {
-            return Column(
-              children: [
-                UserImage.small(
-                  margin: const EdgeInsets.only(top: 10, right: 10),
-                  height: 70,
-                  width: 70,
-                  url: inactiveMatches[index].matchedUser.imageUrls[0],
+            return InkWell(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  ChatScreen.routeName,
+                  arguments: inactiveMatches[index],
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0, right: 10),
+                child: Column(
+                  children: [
+                    UserImage.small(
+                      height: 70,
+                      width: 70,
+                      url: inactiveMatches[index].matchUser.imageUrls[0],
+                    ),
+                    Text(
+                      inactiveMatches[index].matchUser.name,
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                  ],
                 ),
-                Text(
-                  inactiveMatches[index].matchedUser.name,
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-              ],
+              ),
             );
           }),
     );

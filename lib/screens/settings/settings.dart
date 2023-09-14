@@ -9,15 +9,17 @@ import '/widgets/widgets.dart';
 class SettingsScreen extends StatelessWidget {
   static const String routeName = '/settings';
 
+  const SettingsScreen({super.key});
+
   static Route route() {
     return MaterialPageRoute(
-      settings: RouteSettings(name: routeName),
+      settings: const RouteSettings(name: routeName),
       builder: (context) {
         print(BlocProvider.of<AuthBloc>(context).state);
 
         return BlocProvider.of<AuthBloc>(context).state.status ==
                 AuthStatus.unauthenticated
-            ? LoginScreen()
+            ? const LoginScreen()
             : BlocProvider<ProfileBloc>(
                 create: (context) => ProfileBloc(
                   authBloc: BlocProvider.of<AuthBloc>(context),
@@ -26,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
                     LoadProfile(
                         userId: context.read<AuthBloc>().state.authUser!.uid),
                   ),
-                child: SettingsScreen(),
+                child: const SettingsScreen(),
               );
       },
     );
@@ -35,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'SETTINGS'),
+      appBar: const CustomAppBar(title: 'SETTINGS'),
       body: SingleChildScrollView(
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
@@ -80,9 +82,9 @@ class SettingsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    _GenderPreference(),
-                    _AgeRangePreference(),
+                    const SizedBox(height: 10),
+                    const _GenderPreference(),
+                    const _AgeRangePreference(),
                   ],
                 ),
               );
@@ -223,7 +225,7 @@ class _GenderPreference extends StatelessWidget {
                 ),
                 Text(
                   'Man',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ],
             ),
@@ -264,11 +266,11 @@ class _GenderPreference extends StatelessWidget {
                 ),
                 Text(
                   'Woman',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
           ],
         );
       },

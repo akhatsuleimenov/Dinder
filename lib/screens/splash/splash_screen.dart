@@ -47,36 +47,34 @@ class SplashScreen extends StatelessWidget {
           }
         },
         child: Scaffold(
-          body: Container(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/logo.svg',
-                    height: 100,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'DINDER',
-                    style: Theme.of(context).textTheme.headline1,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      RepositoryProvider.of<AuthRepository>(context).signOut();
-                    },
-                    child: Center(
-                      child: Text(
-                        'Sign Out',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(color: Theme.of(context).primaryColor),
-                      ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/logo.svg',
+                  height: 100,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'DINDER',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                TextButton(
+                  onPressed: () {
+                    RepositoryProvider.of<AuthRepository>(context).signOut();
+                  },
+                  child: Center(
+                    child: Text(
+                      'Sign Out',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(color: Theme.of(context).primaryColor),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

@@ -7,13 +7,13 @@ class User extends Equatable {
   final int age;
   final String gender;
   final List<dynamic> imageUrls;
-  final List<dynamic> interests;
+  // final List<dynamic> interests;
   final String bio;
   final String major;
   final String giver;
   final List<String>? swipeLeft;
   final List<String>? swipeRight;
-  final List<String>? matches;
+  final List<Map<String, dynamic>>? matches;
   final List<String>? genderPreference;
   final List<int>? ageRangePreference;
 
@@ -24,7 +24,7 @@ class User extends Equatable {
     required this.gender,
     required this.imageUrls,
     required this.bio,
-    required this.interests,
+    // required this.interests,
     required this.major,
     required this.giver,
     this.swipeLeft,
@@ -41,7 +41,7 @@ class User extends Equatable {
     gender: '',
     imageUrls: [],
     major: '',
-    interests: [],
+    // interests: [],
     bio: '',
     giver: 'false',
     swipeLeft: [],
@@ -60,6 +60,7 @@ class User extends Equatable {
         imageUrls,
         bio,
         major,
+        // interests,
         giver,
         swipeLeft,
         swipeRight,
@@ -92,7 +93,7 @@ class User extends Equatable {
       gender: snap['gender'],
       imageUrls: snap['imageUrls'],
       bio: snap['bio'],
-      interests: snap['interests'],
+      // interests: snap['interests'],
       major: snap['major'],
       giver: snap['giver'],
       swipeLeft: ((snap['swipeLeft'] ?? []) as List)
@@ -102,7 +103,7 @@ class User extends Equatable {
           .map((swipeRight) => swipeRight as String)
           .toList(),
       matches: ((snap['matches'] ?? []) as List)
-          .map((matches) => matches as String)
+          .map((matches) => matches as Map<String, dynamic>)
           .toList(),
       genderPreference: userGenderPreference,
       ageRangePreference: userAgeRangePreference,
@@ -116,7 +117,7 @@ class User extends Equatable {
       'age': age,
       'gender': gender,
       'imageUrls': imageUrls,
-      'interests': interests,
+      // 'interests': interests,
       'bio': bio,
       'major': major,
       'giver': giver,
@@ -134,13 +135,13 @@ class User extends Equatable {
     int? age,
     String? gender,
     List<dynamic>? imageUrls,
-    List<dynamic>? interests,
+    // List<dynamic>? interests,
     String? bio,
     String? major,
     String? giver,
     List<String>? swipeLeft,
     List<String>? swipeRight,
-    List<String>? matches,
+    List<Map<String, dynamic>>? matches,
     List<String>? genderPreference,
     List<int>? ageRangePreference,
   }) {
@@ -150,7 +151,7 @@ class User extends Equatable {
       age: age ?? this.age,
       gender: gender ?? this.gender,
       imageUrls: imageUrls ?? this.imageUrls,
-      interests: interests ?? this.interests,
+      // interests: interests ?? this.interests,
       bio: bio ?? this.bio,
       major: major ?? this.major,
       giver: giver ?? this.giver,
