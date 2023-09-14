@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatelessWidget {
   final String? hint;
   final String? initialValue;
+  final String? errorText;
   final Function(String)? onChanged;
   final Function(bool)? onFocusChanged;
   final EdgeInsets padding;
@@ -11,6 +12,7 @@ class CustomTextField extends StatelessWidget {
     Key? key,
     this.hint = '',
     this.initialValue = '',
+    this.errorText,
     this.onChanged,
     this.onFocusChanged,
     this.padding = const EdgeInsets.symmetric(horizontal: 20),
@@ -26,6 +28,7 @@ class CustomTextField extends StatelessWidget {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
+            errorText: errorText,
             hintText: hint,
             contentPadding: const EdgeInsets.only(
               bottom: 5,

@@ -22,17 +22,21 @@ class Start extends StatelessWidget {
             .add(ContinueOnboarding(user: state.user));
       },
       children: [
-        SizedBox(
-          height: 200,
-          width: 200,
-          child: SvgPicture.asset('assets/logo.svg'),
+        Center(
+          child: SizedBox(
+            height: 200,
+            width: 200,
+            child: SvgPicture.asset('assets/logo.svg'),
+          ),
         ),
         const SizedBox(
           height: 50,
         ),
-        Text(
-          'Welcome to Dinder',
-          style: Theme.of(context).textTheme.displayMedium,
+        Center(
+          child: Text(
+            'Welcome to Dinder',
+            style: Theme.of(context).textTheme.displayMedium,
+          ),
         ),
         Text(
           'Generating long and coherent text is an important but challenging task, particularly for open-ended language generation tasks such as story generation.',

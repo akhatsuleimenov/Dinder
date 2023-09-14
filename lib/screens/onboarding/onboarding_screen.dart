@@ -73,9 +73,9 @@ class OnboardingScreen extends StatelessWidget {
                     children: [
                       Start(state: state),
                       Email(state: state),
-                      Bio(state: state),
-                      Pictures(state: state),
                       Info(state: state),
+                      Pictures(state: state),
+                      Bio(state: state),
                     ],
                   );
                 } else {
