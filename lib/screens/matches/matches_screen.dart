@@ -1,8 +1,8 @@
-import 'package:dinder/repositories/repositories.dart';
-import 'package:dinder/screens/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/screens/screens.dart';
+import '/repositories/repositories.dart';
 import '/blocs/blocs.dart';
 import '/models/models.dart';
 import '/widgets/widgets.dart';
@@ -27,7 +27,8 @@ class MatchesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Matches'),
+      appBar: const CustomAppBar(title: 'MATCHES'),
+      bottomNavigationBar: const CustomBottomBar(),
       body: BlocBuilder<MatchBloc, MatchState>(
         builder: (context, state) {
           if (state is MatchLoading) {
@@ -81,8 +82,8 @@ class MatchesScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    beginColor: Theme.of(context).focusColor,
-                    endColor: Theme.of(context).primaryColor,
+                    beginColor: Theme.of(context).primaryColor,
+                    endColor: Theme.of(context).scaffoldBackgroundColor,
                   ),
                 ],
               ),

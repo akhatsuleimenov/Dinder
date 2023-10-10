@@ -6,3 +6,4 @@ export 'custom_text_container.dart';
 export 'user_image.dart';
 export 'custom_elevated_button.dart';
 export 'add_user_image.dart';
+export 'screen_arguments.dart';

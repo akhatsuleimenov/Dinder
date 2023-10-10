@@ -28,8 +28,8 @@ class ChoiceButton extends StatelessWidget {
           gradient: hasGradient
               ? LinearGradient(
                   colors: [
-                    Theme.of(context).focusColor,
                     Theme.of(context).primaryColor,
+                    Theme.of(context).scaffoldBackgroundColor,
                   ],
                 )
               : const LinearGradient(

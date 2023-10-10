@@ -39,9 +39,9 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(
         title: 'PROFILE',
-        actionIcons: [Icons.message, Icons.settings],
-        actionRoutes: [MatchesScreen.routeName, SettingsScreen.routeName],
+        hasAction: true,
       ),
+      bottomNavigationBar: const CustomBottomBar(),
       body: SingleChildScrollView(
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
@@ -61,8 +61,10 @@ class ProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                         gradient: LinearGradient(
                           colors: [
-                            Theme.of(context).primaryColor.withOpacity(0.1),
-                            Theme.of(context).focusColor.withOpacity(0.5),
+                            Theme.of(context).primaryColor.withOpacity(0.9),
+                            Theme.of(context)
+                                .scaffoldBackgroundColor
+                                .withOpacity(0.5),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -85,46 +87,25 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        CustomElevatedButton(
-                          text: 'View',
-                          beginColor: state.isEditingOn
-                              ? Colors.white
-                              : Theme.of(context).primaryColor,
-                          endColor: state.isEditingOn
-                              ? Colors.white
-                              : Theme.of(context).focusColor,
-                          textColor: state.isEditingOn
-                              ? Theme.of(context).primaryColor
-                              : Colors.white,
-                          onPressed: () {
-                            context.read<ProfileBloc>().add(
-                                  SaveProfile(user: state.user),
-                                );
-                          },
-                          width: MediaQuery.of(context).size.width * 0.45,
-                        ),
-                        const SizedBox(width: 10),
-                        CustomElevatedButton(
-                          text: 'Edit',
-                          beginColor: state.isEditingOn
-                              ? Theme.of(context).primaryColor
-                              : Colors.white,
-                          endColor: state.isEditingOn
-                              ? Theme.of(context).focusColor
-                              : Colors.white,
-                          textColor: state.isEditingOn
-                              ? Colors.white
-                              : Theme.of(context).primaryColor,
-                          onPressed: () {
-                            context.read<ProfileBloc>().add(
-                                  const EditProfile(isEditingOn: true),
-                                );
-                          },
-                          width: MediaQuery.of(context).size.width * 0.45,
-                        )
-                      ],
+                    child: CustomElevatedButton(
+                      text: state.isEditingOn ? 'Save' : 'Edit',
+                      beginColor: state.isEditingOn
+                          ? Theme.of(context).primaryColor
+                          : Colors.white,
+                      endColor: state.isEditingOn
+                          ? Colors.white
+                          : Theme.of(context).scaffoldBackgroundColor,
+                      textColor: state.isEditingOn
+                          ? Colors.white
+                          : Theme.of(context).primaryColor,
+                      onPressed: () {
+                        context.read<ProfileBloc>().add(
+                              state.isEditingOn
+                                  ? SaveProfile(user: state.user)
+                                  : const EditProfile(isEditingOn: true),
+                            );
+                      },
+                      width: MediaQuery.of(context).size.width,
                     ),
                   ),
                   Padding(
@@ -316,6 +297,7 @@ class _SignOut extends StatelessWidget {
             TextButton(
               onPressed: () {
                 RepositoryProvider.of<AuthRepository>(context).signOut();
+                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
               },
               child: Center(
                 child: Text(

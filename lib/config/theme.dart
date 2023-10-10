@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 ThemeData theme() {
   return ThemeData(
-    primaryColor: const Color.fromARGB(255, 169, 20, 20),
-    primaryColorDark: const Color.fromARGB(255, 115, 1, 1),
-    primaryColorLight: const Color(0xFFFE9AAA),
-    cardColor: const Color.fromARGB(255, 37, 212, 231),
-    focusColor: const Color.fromARGB(255, 106, 0, 255),
+    primaryColor: const Color.fromARGB(255, 94, 106, 238), // primary
+    scaffoldBackgroundColor:
+        const Color.fromARGB(255, 244, 244, 250), // secondary
+    hintColor: const Color.fromARGB(255, 56, 175, 234), // accent
     shadowColor: const Color(0xFFF4F4F4),
-    scaffoldBackgroundColor: Colors.white,
-    fontFamily: 'Optima',
+    unselectedWidgetColor: const Color.fromARGB(255, 134, 132, 170),
+    // fontFamily: 'Optima', // Optima
     textTheme: const TextTheme(
       displayLarge: TextStyle(
         color: Color(0xFF2B2E4A),

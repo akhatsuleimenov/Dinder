@@ -18,8 +18,8 @@ class CustomTextContainer extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           gradient: LinearGradient(colors: [
-            Theme.of(context).focusColor,
-            Theme.of(context).primaryColor
+            Theme.of(context).primaryColor,
+            Theme.of(context).scaffoldBackgroundColor
           ]),
         ),
         child: Center(

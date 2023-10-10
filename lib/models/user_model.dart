@@ -10,7 +10,7 @@ class User extends Equatable {
   // final List<dynamic> interests;
   final String bio;
   final String major;
-  final String giver;
+  final bool giver;
   final List<String>? swipeLeft;
   final List<String>? swipeRight;
   final List<Map<String, dynamic>>? matches;
@@ -43,7 +43,7 @@ class User extends Equatable {
     major: '',
     // interests: [],
     bio: '',
-    giver: 'false',
+    giver: false,
     swipeLeft: [],
     swipeRight: [],
     matches: [],
@@ -138,7 +138,7 @@ class User extends Equatable {
     // List<dynamic>? interests,
     String? bio,
     String? major,
-    String? giver,
+    bool? giver,
     List<String>? swipeLeft,
     List<String>? swipeRight,
     List<Map<String, dynamic>>? matches,

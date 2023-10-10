@@ -31,18 +31,21 @@ class SplashScreen extends StatelessWidget {
         },
         listener: (context, state) {
           print("Splash Screen Listener");
-          if (state.status == AuthStatus.unauthenticated) {
-            Timer(
-              const Duration(seconds: 1),
-              () => Navigator.of(context).pushNamed(
-                LoginScreen.routeName,
-                // ModalRoute.withName('/login'),
-              ),
-            );
-          } else if (state.status == AuthStatus.authenticated) {
+          if (state.status == AuthStatus.authenticated) {
+            print("pushed HomeScreen");
             Timer(
               const Duration(seconds: 1),
               () => Navigator.of(context).pushNamed(HomeScreen.routeName),
+            );
+          } else {
+            print("pushed LoginScreen");
+            Timer(
+              const Duration(seconds: 1),
+              () => Navigator.pushNamed(
+                context,
+                LoginScreen.routeName,
+                // ModalRoute.withName('/login'),
+              ),
             );
           }
         },

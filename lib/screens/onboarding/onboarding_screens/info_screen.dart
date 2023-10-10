@@ -74,22 +74,22 @@ class Info extends StatelessWidget {
         const SizedBox(height: 10),
         CustomCheckbox(
           text: 'GIVER',
-          value: state.user.giver == 'true',
+          value: state.user.giver == true,
           onChanged: (bool? newValue) {
             context.read<OnboardingBloc>().add(
                   UpdateUser(
-                    user: state.user.copyWith(giver: 'true'),
+                    user: state.user.copyWith(giver: true),
                   ),
                 );
           },
         ),
         CustomCheckbox(
           text: 'RECEIVER',
-          value: state.user.giver == 'false',
+          value: state.user.giver == false,
           onChanged: (bool? newValue) {
             context.read<OnboardingBloc>().add(
                   UpdateUser(
-                    user: state.user.copyWith(giver: 'false'),
+                    user: state.user.copyWith(giver: false),
                   ),
                 );
           },

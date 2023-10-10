@@ -22,7 +22,7 @@ class SettingsScreen extends StatelessWidget {
             ? const LoginScreen()
             : BlocProvider<ProfileBloc>(
                 create: (context) => ProfileBloc(
-                  authBloc: BlocProvider.of<AuthBloc>(context),
+                  authBloc: context.read<AuthBloc>(),
                   databaseRepository: context.read<DatabaseRepository>(),
                 )..add(
                     LoadProfile(
@@ -37,7 +37,10 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'SETTINGS'),
+      appBar: const CustomAppBar(
+        title: 'SETTINGS',
+        hasAction: true,
+      ),
       body: SingleChildScrollView(
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
@@ -68,7 +71,7 @@ class SettingsScreen extends StatelessWidget {
                         gradient: LinearGradient(
                           colors: [
                             Theme.of(context).primaryColor,
-                            Theme.of(context).focusColor,
+                            Theme.of(context).scaffoldBackgroundColor,
                           ],
                         ),
                       ),
@@ -125,8 +128,8 @@ class _AgeRangePreference extends StatelessWidget {
                     ),
                     min: 18,
                     max: 100,
-                    activeColor: Theme.of(context).focusColor,
-                    inactiveColor: Theme.of(context).focusColor,
+                    activeColor: Theme.of(context).primaryColor,
+                    inactiveColor: Theme.of(context).scaffoldBackgroundColor,
                     onChanged: (rangeValues) {
                       context.read<ProfileBloc>().add(
                             UpdateUserProfile(

@@ -47,16 +47,6 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 LoginCubit(authRepository: context.read<AuthRepository>()),
           ),
-          BlocProvider(
-            create: (context) => ProfileBloc(
-              authBloc: BlocProvider.of<AuthBloc>(context),
-              databaseRepository: context.read<DatabaseRepository>(),
-            )..add(
-                LoadProfile(
-                    userId:
-                        BlocProvider.of<AuthBloc>(context).state.authUser!.uid),
-              ),
-          ),
         ],
         child: MaterialApp(
           title: 'Dating App',

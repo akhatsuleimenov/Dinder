@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '/repositories/repositories.dart';
 
@@ -46,4 +47,17 @@ class SignupCubit extends Cubit<SignupState> {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
   }
+
+  // signInWithGoogle() async {
+  //   final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+  //   final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+
+  //   final credential = auth.GoogleAuthProvider.credential(
+  //     accessToken: gAuth.accessToken,
+  //     idToken: gAuth.idToken,
+  //   );
+
+  //   return await auth.FirebaseAuth.instance.signInWithCredential(credential);
+  // }
 }

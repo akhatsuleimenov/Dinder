@@ -5,19 +5,12 @@ import '/screens/screens.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool hasActions;
-  final List<IconData> actionIcons;
-  final List<String> actionRoutes;
+  final bool hasAction;
 
   const CustomAppBar({
     Key? key,
     required this.title,
-    this.hasActions = true,
-    this.actionIcons = const [Icons.message, Icons.person],
-    this.actionRoutes = const [
-      MatchesScreen.routeName,
-      ProfileScreen.routeName
-    ],
+    this.hasAction = false,
   }) : super(key: key);
 
   @override
@@ -25,50 +18,49 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      centerTitle: false,
       automaticallyImplyLeading: false,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {
-                Navigator.popAndPushNamed(context, '/');
-              },
-              child: SvgPicture.asset(
-                'assets/logo.svg',
-                height: 35,
-              ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: SvgPicture.asset(
+              'assets/logo.svg',
+              height: 35,
             ),
           ),
-          Expanded(
-            flex: 2,
+          Padding(
+            padding: EdgeInsets.only(left: hasAction ? 10 : 0),
             child: Text(
               title,
               style: Theme.of(context)
                   .textTheme
                   .displayMedium
-                  ?.copyWith(color: Theme.of(context).focusColor),
+                  ?.copyWith(color: Theme.of(context).primaryColor),
             ),
+          ),
+          SizedBox(
+            width: hasAction ? 0 : 40,
           ),
         ],
       ),
-      actions: hasActions
-          ? [
-              IconButton(
-                  icon: Icon(actionIcons[0],
-                      color: Theme.of(context).primaryColor),
-                  onPressed: () {
-                    Navigator.pushNamed(context, actionRoutes[0]);
-                  }),
-              IconButton(
-                  icon: Icon(actionIcons[1],
-                      color: Theme.of(context).primaryColor),
-                  onPressed: () {
-                    Navigator.pushNamed(context, actionRoutes[1]);
-                  }),
-            ]
-          : null,
+      actions: [
+        hasAction
+            ? IconButton(
+                icon: Icon(
+                  title == "PROFILE" ? Icons.settings : Icons.person,
+                  color: Theme.of(context).primaryColor,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(
+                      context,
+                      title == "PROFILE"
+                          ? SettingsScreen.routeName
+                          : ProfileScreen.routeName);
+                },
+              )
+            : Container(),
+      ],
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:dinder/repositories/repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/widgets/widgets.dart';
 import '/blocs/blocs.dart';
 import '/models/models.dart';
 
@@ -33,6 +34,7 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _CustomAppBar(match: match),
+      bottomNavigationBar: const CustomBottomBar(),
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           if (state is ChatLoading) {
@@ -188,9 +190,16 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Column(
         children: [
-          CircleAvatar(
-            radius: 15,
-            backgroundImage: NetworkImage(match.matchUser.imageUrls[0]),
+          InkWell(
+            onDoubleTap: () {
+              Navigator.pushNamed(context, '/users',
+                  arguments:
+                      ScreenArguments(user: match.matchUser, action: false));
+            },
+            child: CircleAvatar(
+              radius: 15,
+              backgroundImage: NetworkImage(match.matchUser.imageUrls[0]),
+            ),
           ),
           Text(
             match.matchUser.name,

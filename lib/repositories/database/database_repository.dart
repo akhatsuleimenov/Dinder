@@ -51,19 +51,20 @@ class DatabaseRepository extends BaseDatabaseRepository {
     print("Calling getUsers");
     return _firebaseFirestore
         .collection('users')
-        .where('gender', whereIn: _selectGender(user))
+        // .where('gender', whereIn: _selectGender(user))
+        .where('giver', isEqualTo: user.giver == false ? true : false)
         .snapshots()
         .map((snap) {
       return snap.docs.map((doc) => User.fromSnapshot(doc)).toList();
     });
   }
 
-  _selectGender(User user) {
-    if (user.genderPreference!.isEmpty) {
-      return ['Male', 'Female'];
-    }
-    return user.genderPreference;
-  }
+  // _selectGender(User user) {
+  //   if (user.genderPreference!.isEmpty) {
+  //     return ['Male', 'Female'];
+  //   }
+  //   return user.genderPreference;
+  // }
 
   @override
   Future<void> updateUserSwipe(
@@ -129,7 +130,7 @@ class DatabaseRepository extends BaseDatabaseRepository {
         .doc(user.id)
         .update(user.toMap())
         .then(
-          (value) => print('User document updated.'),
+          (value) => print('User document updated with $user'),
         );
   }
 
@@ -202,12 +203,15 @@ class DatabaseRepository extends BaseDatabaseRepository {
             bool isWithinAgeRange =
                 user.age >= currentUser.ageRangePreference![0] &&
                     user.age <= currentUser.ageRangePreference![1];
+            bool isGenderPreferred =
+                currentUser.genderPreference!.contains(user.gender);
 
             if (isCurrentUser ||
                 wasSwipedLeft ||
                 wasSwipedRight ||
                 isMatch ||
-                !isWithinAgeRange) return false;
+                !isWithinAgeRange ||
+                !isGenderPreferred) return false;
             return true;
           },
         ).toList();

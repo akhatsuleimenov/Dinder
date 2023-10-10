@@ -54,7 +54,6 @@ class OnboardingScreen extends StatelessWidget {
         return Scaffold(
           appBar: const CustomAppBar(
             title: 'DINDER',
-            hasActions: false,
           ),
           body: Padding(
             padding: const EdgeInsets.symmetric(
@@ -126,7 +125,8 @@ class OnboardingScreenLayout extends StatelessWidget {
                           totalSteps: 6,
                           currentStep: currentStep,
                           selectedColor: Theme.of(context).primaryColor,
-                          unselectedColor: Theme.of(context).focusColor,
+                          unselectedColor:
+                              Theme.of(context).scaffoldBackgroundColor,
                         ),
                         const SizedBox(height: 10),
                         CustomButton(

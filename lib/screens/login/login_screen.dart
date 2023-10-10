@@ -1,3 +1,5 @@
+import 'package:dinder/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -15,7 +17,7 @@ class LoginScreen extends StatelessWidget {
         settings: const RouteSettings(name: routeName),
         builder: (context) {
           return BlocProvider.of<AuthBloc>(context).state.status ==
-                  AuthStatus.unauthenticated
+                  AuthStatus.authenticated
               ? const HomeScreen()
               : const LoginScreen();
         });
@@ -28,7 +30,6 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "DINDER",
-        hasActions: false,
       ),
       body: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
@@ -49,19 +50,34 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 10),
               _PasswordInput(),
               const SizedBox(height: 10),
-              const _LoginButton(),
+              const _LogInButton(),
               const SizedBox(
                 height: 10,
               ),
-              CustomElevatedButton(
-                text: 'SIGNUP',
-                textColor: Colors.white,
-                onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                  OnboardingScreen.routeName,
-                  ModalRoute.withName('/onboarding'),
-                ),
-                beginColor: Theme.of(context).focusColor,
-                endColor: Theme.of(context).primaryColor,
+              const _SignUpButton(),
+              const Divider(
+                thickness: 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _ThirdPartySignIn(
+                    imagePath: 'assets/google.png',
+                    onTap: () async {
+                      // context.read<SignupCubit>().signInWithGoogle();
+                      User? user = await AuthService.signInWithGoogle();
+                      if (user != null) {
+                        Navigator.pushReplacementNamed(
+                            context, HomeScreen.routeName);
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 25),
+                  _ThirdPartySignIn(
+                    imagePath: 'assets/apple.png',
+                    onTap: () {},
+                  ),
+                ],
               )
             ],
           ),
@@ -71,8 +87,54 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class _LoginButton extends StatelessWidget {
-  const _LoginButton();
+class _SignUpButton extends StatelessWidget {
+  const _SignUpButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomElevatedButton(
+      text: 'SIGNUP',
+      textColor: Colors.white,
+      onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+        OnboardingScreen.routeName,
+        ModalRoute.withName('/onboarding'),
+      ),
+      beginColor: Theme.of(context).primaryColor,
+      endColor: Theme.of(context).scaffoldBackgroundColor,
+    );
+  }
+}
+
+class _ThirdPartySignIn extends StatelessWidget {
+  final String imagePath;
+  final Function()? onTap;
+  const _ThirdPartySignIn({
+    required this.imagePath,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.grey[200],
+        ),
+        child: Image.asset(
+          imagePath,
+          height: 40,
+        ),
+      ),
+    );
+  }
+}
+
+class _LogInButton extends StatelessWidget {
+  const _LogInButton();
 
   @override
   Widget build(BuildContext context) {
@@ -87,14 +149,22 @@ class _LoginButton extends StatelessWidget {
                 text: 'LOGIN',
                 textColor: Theme.of(context).primaryColor,
                 onPressed: () {
-                  state.status == FormzStatus.valid
-                      ? context.read<LoginCubit>().logInWithCredentials()
-                      : ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                "Check your email and password: ${state.status}"),
-                          ),
-                        );
+                  if (state.status == FormzStatus.valid) {
+                    context.read<LoginCubit>().logInWithCredentials();
+                    // Navigator.of(context).pushNamed(
+                    //   HomeScreen.routeName,
+                    //   // ModalRoute.withName('/'),
+                    // );
+                    Navigator.pushReplacementNamed(
+                        context, HomeScreen.routeName);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            "Check your email and password: ${state.status}"),
+                      ),
+                    );
+                  }
                 },
                 beginColor: Colors.white,
                 endColor: Colors.white,

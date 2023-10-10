@@ -48,8 +48,11 @@ dependencies:
   uuid: ^3.0.5
   logger: ^2.0.1
   rxdart: ^0.27.7
+  animated_toggle_switch: ^0.8.0
+  google_sign_in: ^6.1.5
   form_inputs:
     path: packages/form_inputs
+  formz: ^0.4.1
 
 dev_dependencies:
   flutter_test:

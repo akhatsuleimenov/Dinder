@@ -88,6 +88,7 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
     SwipeRight event,
     Emitter<SwipeState> emit,
   ) async {
+    print("Inside Swipe Right");
     final state = this.state as SwipeLoaded;
     String userId = _authBloc.state.authUser!.uid;
     List<User> users = List.from(state.users)..remove(event.user);
@@ -111,9 +112,9 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
     }
   }
 
-  @override
-  Future<void> close() async {
-    _authSubscription?.cancel();
-    super.close();
-  }
+  // @override
+  // Future<void> close() async {
+  //   _authSubscription?.cancel();
+  //   super.close();
+  // }
 }

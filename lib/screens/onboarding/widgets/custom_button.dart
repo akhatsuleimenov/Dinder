@@ -16,8 +16,8 @@ class CustomButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5.0),
         gradient: LinearGradient(colors: [
-          Theme.of(context).focusColor,
           Theme.of(context).primaryColor,
+          Theme.of(context).scaffoldBackgroundColor,
         ]),
       ),
       child: ElevatedButton(

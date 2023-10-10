@@ -1,3 +1,4 @@
+import 'package:dinder/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import '/models/models.dart';
@@ -9,7 +10,7 @@ class AppRouter {
       case '/':
         return HomeScreen.route();
       case UsersScreen.routeName:
-        return UsersScreen.route(user: settings.arguments as User);
+        return UsersScreen.route(args: settings.arguments as ScreenArguments);
       case SplashScreen.routeName:
         return SplashScreen.route();
       case OnboardingScreen.routeName:

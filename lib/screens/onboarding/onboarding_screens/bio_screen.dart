@@ -43,16 +43,16 @@ class Bio extends StatelessWidget {
                 );
           },
         ),
-        const SizedBox(height: 50),
-        const CustomTextHeader(text: 'What Do You Like?'),
-        const Row(
-          children: [
-            CustomTextContainer(text: 'Music'),
-            CustomTextContainer(text: 'Art'),
-            CustomTextContainer(text: 'Sports'),
-            CustomTextContainer(text: 'Chess'),
-          ],
-        ),
+        // lahsconst SizedBox(height: 50),
+        // const CustomTextHeader(text: 'What Do You Like?'),
+        // const Row(
+        //   children: [
+        //     CustomTextContainer(text: 'Music'),
+        //     CustomTextContainer(text: 'Art'),
+        //     CustomTextContainer(text: 'Sports'),
+        //     CustomTextContainer(text: 'Chess'),
+        //   ],
+        // ),
       ],
     );
   }
