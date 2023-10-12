@@ -82,6 +82,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   @override
   Future<void> close() {
+    print("INSIDE CHATBLOC CANCEL");
     _chatSubscription?.cancel();
     return super.close();
   }

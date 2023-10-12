@@ -1,5 +1,3 @@
-import 'package:dinder/services/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -14,75 +12,91 @@ class LoginScreen extends StatelessWidget {
 
   static Route route() {
     return MaterialPageRoute(
-        settings: const RouteSettings(name: routeName),
-        builder: (context) {
-          return BlocProvider.of<AuthBloc>(context).state.status ==
-                  AuthStatus.authenticated
-              ? const HomeScreen()
-              : const LoginScreen();
-        });
+      settings: const RouteSettings(name: routeName),
+      builder: (context) {
+        return BlocProvider.of<AuthBloc>(context).state.status ==
+                AuthStatus.authenticated
+            ? const HomeScreen()
+            : const LoginScreen();
+      },
+    );
   }
 
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
-        title: "DINDER",
-      ),
-      body: BlocListener<LoginCubit, LoginState>(
-        listener: (context, state) {
-          if (state.status.isSubmissionFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? "Failure to authenticate"),
-              ),
-            );
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _EmailInput(),
-              const SizedBox(height: 10),
-              _PasswordInput(),
-              const SizedBox(height: 10),
-              const _LogInButton(),
-              const SizedBox(
-                height: 10,
-              ),
-              const _SignUpButton(),
-              const Divider(
-                thickness: 2,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _ThirdPartySignIn(
-                    imagePath: 'assets/google.png',
-                    onTap: () async {
-                      // context.read<SignupCubit>().signInWithGoogle();
-                      User? user = await AuthService.signInWithGoogle();
-                      if (user != null) {
-                        Navigator.pushReplacementNamed(
-                            context, HomeScreen.routeName);
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 25),
-                  _ThirdPartySignIn(
-                    imagePath: 'assets/apple.png',
-                    onTap: () {},
-                  ),
-                ],
-              )
-            ],
+    return BlocBuilder<LoginCubit, LoginState>(
+      buildWhen: (previous, current) {
+        print("BUILDED! ${previous.status} - ${current.status}");
+        return previous.status != current.status;
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: const CustomAppBar(
+            title: "DINDER",
           ),
-        ),
-      ),
+          body: BlocListener<LoginCubit, LoginState>(
+            listener: (context, state) {
+              print("LISTENING! ${state.status} - ${state.status}");
+              if (state.status.isSubmissionFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Text(state.errorMessage ?? "Failure to authenticate"),
+                  ),
+                );
+              }
+            },
+            child: state.status == FormzStatus.submissionInProgress ||
+                    state.status == FormzStatus.submissionSuccess
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _EmailInput(),
+                        const SizedBox(height: 10),
+                        _PasswordInput(),
+                        const SizedBox(height: 10),
+                        _LogInButton(state: state),
+                        const SizedBox(height: 10),
+                        const _SignUpButton(),
+                        // const Divider(
+                        //   thickness: 2,
+                        // ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     _ThirdPartySignIn(
+                        //       imagePath: 'assets/google.png',
+                        //       onTap: () async {
+                        //         print("Pressed");
+                        //         // User? user =
+                        //             // await context.read<SignupCubit>().signInWithGoogle();
+                        //         // User? user = await AuthService.signInWithGoogle();
+                        //         // print(user);
+                        //         // if (user != null) {
+                        //         //   print(user.email);
+                        //           Navigator.of(context).pushReplacementNamed(
+                        //               OnboardingScreen.routeName);
+                        //         // }
+                        //       },
+                        //     ),
+                        //     const SizedBox(width: 25),
+                        //     _ThirdPartySignIn(
+                        //       imagePath: 'assets/apple.png',
+                        //       onTap: () {},
+                        //     ),
+                        //   ],
+                        // )
+                      ],
+                    ),
+                  ),
+          ),
+        );
+      },
     );
   }
 }
@@ -93,84 +107,77 @@ class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomElevatedButton(
-      text: 'SIGNUP',
+      text: 'SIGN UP',
       textColor: Colors.white,
+      // onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+      //     OnboardingScreen.routeName, ModalRoute.withName('/onboarding')),
       onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-        OnboardingScreen.routeName,
-        ModalRoute.withName('/onboarding'),
-      ),
+          OnboardingScreen.routeName, (route) => false),
+
       beginColor: Theme.of(context).primaryColor,
       endColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 }
 
-class _ThirdPartySignIn extends StatelessWidget {
-  final String imagePath;
-  final Function()? onTap;
-  const _ThirdPartySignIn({
-    required this.imagePath,
-    required this.onTap,
-  });
+// class _ThirdPartySignIn extends StatelessWidget {
+//   final String imagePath;
+//   final Function()? onTap;
+//   const _ThirdPartySignIn({
+//     required this.imagePath,
+//     required this.onTap,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.grey[200],
-        ),
-        child: Image.asset(
-          imagePath,
-          height: 40,
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: Container(
+//         padding: const EdgeInsets.all(20),
+//         decoration: BoxDecoration(
+//           border: Border.all(color: Colors.white),
+//           borderRadius: BorderRadius.circular(16),
+//           color: Colors.grey[200],
+//         ),
+//         child: Image.asset(
+//           imagePath,
+//           height: 40,
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class _LogInButton extends StatelessWidget {
-  const _LogInButton();
+  final LoginState state;
+
+  const _LogInButton({required this.state});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(
-      buildWhen: (previous, current) {
-        return previous.status != current.status;
-      },
-      builder: (context, state) {
-        return state.status == FormzStatus.submissionInProgress
-            ? const CircularProgressIndicator()
-            : CustomElevatedButton(
-                text: 'LOGIN',
-                textColor: Theme.of(context).primaryColor,
-                onPressed: () {
-                  if (state.status == FormzStatus.valid) {
-                    context.read<LoginCubit>().logInWithCredentials();
-                    // Navigator.of(context).pushNamed(
-                    //   HomeScreen.routeName,
-                    //   // ModalRoute.withName('/'),
-                    // );
-                    Navigator.pushReplacementNamed(
-                        context, HomeScreen.routeName);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            "Check your email and password: ${state.status}"),
-                      ),
-                    );
-                  }
-                },
-                beginColor: Colors.white,
-                endColor: Colors.white,
-              );
-      },
-    );
+    print("STATUS: ${state.status}");
+    return state.status == FormzStatus.submissionInProgress
+        ? const CircularProgressIndicator()
+        : CustomElevatedButton(
+            text: 'LOG IN',
+            textColor: Theme.of(context).primaryColor,
+            onPressed: () {
+              if (state.status == FormzStatus.valid) {
+                print("STATUS 2: ${state.status}");
+                context.read<LoginCubit>().logInWithCredentials();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    HomeScreen.routeName, (route) => false);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Your email or password is incorrect!"),
+                  ),
+                );
+              }
+            },
+            beginColor: Colors.white,
+            endColor: Theme.of(context).scaffoldBackgroundColor,
+          );
   }
 }
 
@@ -186,6 +193,7 @@ class _EmailInput extends StatelessWidget {
           },
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
+            hintText: "@nyu.edu",
             labelText: 'Email',
             errorText:
                 state.email.invalid ? "The email you entered is invalid" : null,
@@ -206,12 +214,12 @@ class _PasswordInput extends StatelessWidget {
           onChanged: (password) {
             context.read<LoginCubit>().passwordChanged(password);
           },
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Password',
-            errorText: state.password.invalid
-                ? "The password must be at least 8 characters, at least 1 number, at least 1 letter, and no spaces"
-                : null,
-            errorMaxLines: 2,
+            // errorText: state.password.invalid
+            //     ? "The password must be at least 8 characters, at least 1 number, at least 1 letter, and no spaces"
+            //     : null,
+            // errorMaxLines: 2,
           ),
           obscureText: true,
         );

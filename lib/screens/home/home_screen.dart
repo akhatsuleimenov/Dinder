@@ -20,11 +20,26 @@ class HomeScreen extends StatelessWidget {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
       builder: (context) {
-        print(BlocProvider.of<AuthBloc>(context).state.status);
+        // print(BlocProvider.of<AuthBloc>(context).state.status);
+        // Timer(const Duration(seconds: 2), () {
+        //   print(
+        //       "HEEEEERE : ${BlocProvider.of<AuthBloc>(context).state.status}");
+        // });
+        // Future.delayed(Duration(seconds: 2), () {
+        //   return;
+        // });
+        return const HomeScreen();
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
         return BlocProvider.of<AuthBloc>(context).state.status ==
-                AuthStatus.unauthenticated
-            ? const LoginScreen()
-            : MultiBlocProvider(
+                AuthStatus.authenticated
+            ? MultiBlocProvider(
                 providers: [
                   BlocProvider<SwipeBloc>(
                     create: (context) => SwipeBloc(
@@ -43,71 +58,67 @@ class HomeScreen extends StatelessWidget {
                       ),
                   ),
                 ],
-                child: const HomeScreen(),
-              );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SwipeBloc, SwipeState>(
-      builder: (context, state) {
-        if (state is SwipeLoading) {
-          print('SwipeLoading');
-          return const Scaffold(
-              appBar: CustomAppBar(
-                title: 'HOME',
-              ),
-              bottomNavigationBar: CustomBottomBar(),
-              body: Center(
-                child: CircularProgressIndicator(),
-              ));
-        } else if (state is SwipeLoaded) {
-          print('SwipeLoadedHomeScreen');
-          return SwipeLoadedHomeScreen(state: state);
-        } else if (state is SwipeMatched) {
-          print('SwipeMatchedHomeScreen');
-          return SwipeMatchedHomeScreen(
-            state: state,
-            onPressed: () {
-              context.read<SwipeBloc>().add(LoadUsers());
-            },
-          );
-        } else if (state is SwipeError) {
-          print('SwipeError');
-          return Scaffold(
-            appBar: const CustomAppBar(
-              title: 'HOME',
-            ),
-            bottomNavigationBar: const CustomBottomBar(),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(width: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'No more users',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ],
+                child: BlocBuilder<SwipeBloc, SwipeState>(
+                  builder: (context, state) {
+                    if (state is SwipeLoading) {
+                      print('SwipeLoading');
+                      return const Scaffold(
+                          appBar: CustomAppBar(
+                            title: 'HOME',
+                          ),
+                          bottomNavigationBar: CustomBottomBar(),
+                          body: Center(
+                            child: CircularProgressIndicator(),
+                          ));
+                    } else if (state is SwipeLoaded) {
+                      print('SwipeLoadedHomeScreen');
+                      return SwipeLoadedHomeScreen(state: state);
+                    } else if (state is SwipeMatched) {
+                      print('SwipeMatchedHomeScreen');
+                      return SwipeMatchedHomeScreen(
+                        state: state,
+                        onPressed: () {
+                          context.read<SwipeBloc>().add(LoadUsers());
+                        },
+                      );
+                    } else if (state is SwipeError) {
+                      print('SwipeError');
+                      return Scaffold(
+                        appBar: const CustomAppBar(
+                          title: 'HOME',
+                        ),
+                        bottomNavigationBar: const CustomBottomBar(),
+                        body: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const SizedBox(width: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'No more users',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                              ],
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: SwitchExample(),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return const Scaffold(
+                        appBar: CustomAppBar(title: 'HOME'),
+                        bottomNavigationBar: CustomBottomBar(),
+                        body: Center(child: Text("Something went wrong!")),
+                      );
+                    }
+                  },
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: SwitchExample(),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return const Scaffold(
-            appBar: CustomAppBar(title: 'HOME'),
-            bottomNavigationBar: CustomBottomBar(),
-            body: Center(child: Text("Something went wrong!")),
-          );
-        }
+              )
+            : const LoginScreen();
       },
     );
   }
@@ -123,6 +134,7 @@ class SwipeLoadedHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var userCount = state.users.length;
+    print("Inside SwipeLoadedHomeScreen");
     return Scaffold(
       appBar: const CustomAppBar(
         title: 'HOME',
@@ -132,9 +144,7 @@ class SwipeLoadedHomeScreen extends StatelessWidget {
         children: [
           InkWell(
             onDoubleTap: () {
-              Navigator.pushNamed(context, '/users',
-                  arguments:
-                      ScreenArguments(user: state.users[0], action: true));
+              Navigator.pushNamed(context, '/users', arguments: state.users[0]);
             },
             child: Draggable(
               feedback: UserCard(user: state.users[0]),

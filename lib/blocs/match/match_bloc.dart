@@ -45,6 +45,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
 
   @override
   Future<void> close() async {
+    print("INSIDE MATCHBLOC CANCEL");
     _databaseSubscription?.cancel();
     super.close();
   }

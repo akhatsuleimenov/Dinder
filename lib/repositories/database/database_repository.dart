@@ -10,6 +10,11 @@ class DatabaseRepository extends BaseDatabaseRepository {
   @override
   Stream<User> getUser(String userId) {
     print('Getting user images from DB');
+    print(_firebaseFirestore
+        .collection('users')
+        .doc(userId)
+        .snapshots()
+        .map((snap) => User.fromSnapshot(snap)));
     return _firebaseFirestore
         .collection('users')
         .doc(userId)
@@ -49,6 +54,14 @@ class DatabaseRepository extends BaseDatabaseRepository {
   @override
   Stream<List<User>> getUsers(User user) {
     print("Calling getUsers");
+    print(_firebaseFirestore
+        .collection('users')
+        // .where('gender', whereIn: _selectGender(user))
+        .where('giver', isEqualTo: user.giver == false ? true : false)
+        .snapshots()
+        .map((snap) {
+      return snap.docs.map((doc) => User.fromSnapshot(doc)).toList();
+    }));
     return _firebaseFirestore
         .collection('users')
         // .where('gender', whereIn: _selectGender(user))
@@ -194,6 +207,33 @@ class DatabaseRepository extends BaseDatabaseRepository {
         User currentUser,
         List<User> users,
       ) {
+        print("USERS: $users");
+        print("USERS RETURNED: ${users.where(
+          (user) {
+            bool isCurrentUser = user.id == currentUser.id;
+            bool wasSwipedLeft = currentUser.swipeLeft!.contains(user.id);
+            bool wasSwipedRight = currentUser.swipeRight!.contains(user.id);
+            bool isMatch = currentUser.matches!.contains(user.id);
+            bool isWithinAgeRange =
+                user.age >= currentUser.ageRangePreference![0] &&
+                    user.age <= currentUser.ageRangePreference![1];
+            bool isGenderPreferred =
+                currentUser.genderPreference!.contains(user.gender);
+            print("CURRENT $isCurrentUser");
+            print("LEFT $wasSwipedLeft");
+            print("RIGHT $wasSwipedRight");
+            print("MATCH $isMatch");
+            print("AGE $isWithinAgeRange");
+            print("GENDER $isGenderPreferred");
+            if (isCurrentUser ||
+                wasSwipedLeft ||
+                wasSwipedRight ||
+                isMatch ||
+                !isWithinAgeRange ||
+                !isGenderPreferred) return false;
+            return true;
+          },
+        ).toList()}");
         return users.where(
           (user) {
             bool isCurrentUser = user.id == currentUser.id;

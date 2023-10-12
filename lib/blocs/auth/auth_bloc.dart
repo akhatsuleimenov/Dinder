@@ -26,10 +26,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     _authUserSubscription = _authRepository.user.listen((authUser) {
       if (authUser != null) {
+        print("AuthBloc $authUser");
         _databaseRepository.getUser(authUser.uid).listen((user) {
           add(AuthUserChanged(authUser: authUser, user: user));
         });
       } else {
+        print("AuthBloc2 $authUser");
         add(AuthUserChanged(authUser: authUser));
       }
     });
@@ -39,6 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthUserChanged event,
     Emitter<AuthState> emit,
   ) {
+    print("_onAuthUserChanged ${event.authUser}");
     event.authUser != null
         ? emit(AuthState.authenticated(
             authUser: event.authUser!, user: event.user!))
@@ -47,6 +50,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   @override
   Future<void> close() {
+    print("INSIDE AUTHBLOC CANCEL");
     _authUserSubscription?.cancel();
     _userSubscription?.cancel();
     return super.close();

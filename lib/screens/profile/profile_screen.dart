@@ -1,7 +1,9 @@
+import 'package:dinder/cubits/login/login_cubit.dart';
+import 'package:dinder/screens/onboarding/widgets/custom_text_field.dart';
+import 'package:dinder/services/indexService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../onboarding/widgets/widgets.dart';
+import 'package:formz/formz.dart';
 import '/blocs/blocs.dart';
 import '/repositories/repositories.dart';
 import '/screens/screens.dart';
@@ -288,16 +290,18 @@ class _SignOut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
+    return BlocBuilder<LoginCubit, LoginState>(
       builder: (context, state) {
-        state as ProfileLoaded;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextButton(
               onPressed: () {
+                IndexService.instance.logout();
                 RepositoryProvider.of<AuthRepository>(context).signOut();
-                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+                context.read<LoginCubit>().statusChanged(FormzStatus.pure);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    LoginScreen.routeName, (route) => false);
               },
               child: Center(
                 child: Text(

@@ -1,4 +1,3 @@
-import 'package:dinder/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import '/models/models.dart';
@@ -6,11 +5,12 @@ import '/screens/screens.dart';
 
 class AppRouter {
   static Route onGenerateRoute(RouteSettings settings) {
+    print("In GENERATE ROUTS: ${settings.name}");
     switch (settings.name) {
       case '/':
         return HomeScreen.route();
       case UsersScreen.routeName:
-        return UsersScreen.route(args: settings.arguments as ScreenArguments);
+        return UsersScreen.route(user: settings.arguments as User);
       case SplashScreen.routeName:
         return SplashScreen.route();
       case OnboardingScreen.routeName:

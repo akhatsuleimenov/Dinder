@@ -93,6 +93,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   @override
   Future<void> close() async {
+    print("INSIDE PROFILEBLOC CANCEL");
     _authSubscription?.cancel();
     super.close();
   }

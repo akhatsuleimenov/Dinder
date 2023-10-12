@@ -52,11 +52,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   color: Theme.of(context).primaryColor,
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(
-                      context,
-                      title == "PROFILE"
-                          ? SettingsScreen.routeName
-                          : ProfileScreen.routeName);
+                  Navigator.of(context).pushReplacementNamed(title == "PROFILE"
+                      ? SettingsScreen.routeName
+                      : ProfileScreen.routeName);
                 },
               )
             : Container(),

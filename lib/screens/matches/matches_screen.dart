@@ -51,9 +51,15 @@ class MatchesScreen extends StatelessWidget {
                     Text('Your Likes',
                         style: Theme.of(context).textTheme.displayMedium),
                     inactiveMatches.isEmpty
-                        ? const Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Text("Go back to swiping"),
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 5.0, left: 10),
+                            child: Text(
+                              "No likes yet... Go and match with folks, lad!",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineLarge
+                                  ?.copyWith(fontWeight: FontWeight.normal),
+                            ),
                           )
                         : MatchesList(inactiveMatches: inactiveMatches),
                     const SizedBox(height: 10),
@@ -80,7 +86,8 @@ class MatchesScreen extends StatelessWidget {
                     text: 'BACK TO SWIPING',
                     textColor: Colors.white,
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.of(context)
+                          .pushReplacementNamed(HomeScreen.routeName);
                     },
                     beginColor: Theme.of(context).primaryColor,
                     endColor: Theme.of(context).scaffoldBackgroundColor,
@@ -137,12 +144,16 @@ class ChatsList extends StatelessWidget {
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
                   const SizedBox(height: 5),
-                  Text(
-                    activeMatches[index].chat.messages[0].message,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineLarge
-                        ?.copyWith(fontWeight: FontWeight.normal),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.69,
+                    child: Text(
+                      activeMatches[index].chat.messages[0].message,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge
+                          ?.copyWith(fontWeight: FontWeight.normal),
+                    ),
                   ),
                   const SizedBox(height: 5),
                   Text(

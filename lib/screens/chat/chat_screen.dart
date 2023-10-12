@@ -2,7 +2,6 @@ import 'package:dinder/repositories/repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/widgets/widgets.dart';
 import '/blocs/blocs.dart';
 import '/models/models.dart';
 
@@ -34,7 +33,7 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _CustomAppBar(match: match),
-      bottomNavigationBar: const CustomBottomBar(),
+      // bottomNavigationBar: const CustomBottomBar(),
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           if (state is ChatLoading) {
@@ -88,6 +87,31 @@ class _MessageInput extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
+          Expanded(
+            child: TextField(
+              controller: controller,
+              maxLines: null,
+              minLines: 1,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Theme.of(context).shadowColor,
+                hintStyle: Theme.of(context).textTheme.headlineLarge,
+                hintText: 'Type here...',
+                contentPadding:
+                    const EdgeInsets.only(left: 10, bottom: 5, top: 5),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor, width: 2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.black12, width: 100),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+          ),
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -106,23 +130,6 @@ class _MessageInput extends StatelessWidget {
                 controller.clear();
               },
               color: Colors.white,
-            ),
-          ),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              decoration: const InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: 'Type here...',
-                contentPadding: EdgeInsets.only(left: 20, bottom: 5, top: 5),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
             ),
           ),
         ],
@@ -146,14 +153,14 @@ class _Message extends StatelessWidget {
         isFromCurrentUser ? Alignment.topRight : Alignment.topLeft;
 
     Color color = isFromCurrentUser
-        ? Theme.of(context).shadowColor
-        : Theme.of(context).primaryColor;
+        ? Theme.of(context).primaryColor
+        : Theme.of(context).hintColor;
 
     TextStyle? textStyle = isFromCurrentUser
-        ? Theme.of(context).textTheme.headlineSmall
+        ? Theme.of(context).textTheme.titleMedium
         : Theme.of(context)
             .textTheme
-            .headlineSmall!
+            .titleMedium!
             .copyWith(color: Colors.white);
 
     return Align(
@@ -193,8 +200,7 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           InkWell(
             onDoubleTap: () {
               Navigator.pushNamed(context, '/users',
-                  arguments:
-                      ScreenArguments(user: match.matchUser, action: false));
+                  arguments: match.matchUser);
             },
             child: CircleAvatar(
               radius: 15,

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,21 +30,11 @@ class SplashScreen extends StatelessWidget {
         listener: (context, state) {
           print("Splash Screen Listener");
           if (state.status == AuthStatus.authenticated) {
-            print("pushed HomeScreen");
-            Timer(
-              const Duration(seconds: 1),
-              () => Navigator.of(context).pushNamed(HomeScreen.routeName),
-            );
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                HomeScreen.routeName, (route) => false);
           } else {
-            print("pushed LoginScreen");
-            Timer(
-              const Duration(seconds: 1),
-              () => Navigator.pushNamed(
-                context,
-                LoginScreen.routeName,
-                // ModalRoute.withName('/login'),
-              ),
-            );
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                LoginScreen.routeName, (route) => false);
           }
         },
         child: Scaffold(
@@ -56,12 +44,15 @@ class SplashScreen extends StatelessWidget {
               children: [
                 SvgPicture.asset(
                   'assets/logo.svg',
-                  height: 100,
+                  height: 200,
                 ),
                 const SizedBox(height: 20),
                 Text(
                   'DINDER',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(fontSize: 50),
                 ),
                 TextButton(
                   onPressed: () {
@@ -70,10 +61,8 @@ class SplashScreen extends StatelessWidget {
                   child: Center(
                     child: Text(
                       'Sign Out',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(color: Theme.of(context).primaryColor),
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: Theme.of(context).primaryColor, fontSize: 30),
                     ),
                   ),
                 ),

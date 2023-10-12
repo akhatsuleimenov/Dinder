@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 ThemeData theme() {
   return ThemeData(
     primaryColor: const Color.fromARGB(255, 94, 106, 238), // primary
+
     scaffoldBackgroundColor:
         const Color.fromARGB(255, 244, 244, 250), // secondary
     hintColor: const Color.fromARGB(255, 56, 175, 234), // accent
