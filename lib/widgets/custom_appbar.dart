@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 
 import '/screens/screens.dart';
 
@@ -24,9 +24,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 10.0),
-            child: SvgPicture.asset(
-              'assets/logo.svg',
-              height: 35,
+            // child: SvgPicture.asset(
+            //   'assets/logo.svg',
+            //   height: 35,
+            // ),
+
+            child: Image.asset(
+              'assets/logo.png',
+              height: 40,
             ),
           ),
           Padding(

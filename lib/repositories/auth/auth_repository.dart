@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 
+import '/widgets/widgets.dart';
 import 'base_auth_repository.dart';
 
 class AuthRepository extends BaseAuthRepository {
@@ -21,12 +22,12 @@ class AuthRepository extends BaseAuthRepository {
       return credential.user;
     } on auth.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        logger.i('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        logger.i('The account already exists for that email.');
       }
     } catch (e) {
-      print(e);
+      logger.i(e);
     }
     return null;
   }

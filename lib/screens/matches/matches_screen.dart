@@ -78,8 +78,8 @@ class MatchesScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'No matches yet.',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    'No matches yet',
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 20),
                   CustomElevatedButton(
@@ -89,8 +89,7 @@ class MatchesScreen extends StatelessWidget {
                       Navigator.of(context)
                           .pushReplacementNamed(HomeScreen.routeName);
                     },
-                    beginColor: Theme.of(context).primaryColor,
-                    endColor: Theme.of(context).scaffoldBackgroundColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ],
               ),
@@ -122,8 +121,7 @@ class ChatsList extends StatelessWidget {
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {
-            Navigator.pushNamed(
-              context,
+            Navigator.of(context).pushNamed(
               ChatScreen.routeName,
               arguments: activeMatches[index],
             );

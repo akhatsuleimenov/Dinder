@@ -4,24 +4,23 @@ class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     Key? key,
     required this.text,
-    required this.beginColor,
-    required this.endColor,
     required this.textColor,
     required this.onPressed,
-    this.width = 200,
+    required this.color,
+    this.width = 300,
   }) : super(key: key);
 
   final String text;
-  final Color beginColor;
-  final Color endColor;
   final Color textColor;
   final double width;
+  final Color color;
   final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
+        color: color,
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
@@ -31,12 +30,6 @@ class CustomElevatedButton extends StatelessWidget {
             offset: const Offset(2, 2),
           ),
         ],
-        gradient: LinearGradient(
-          colors: [
-            beginColor,
-            endColor,
-          ],
-        ),
       ),
       child: ElevatedButton(
         onPressed: onPressed,
@@ -52,7 +45,7 @@ class CustomElevatedButton extends StatelessWidget {
               text,
               style: Theme.of(context)
                   .textTheme
-                  .titleMedium
+                  .titleLarge
                   ?.copyWith(color: textColor),
             ),
           ),

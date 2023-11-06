@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/widgets/widgets.dart';
 import '/blocs/blocs.dart';
 import '/models/models.dart';
 import '/repositories/repositories.dart';
@@ -29,7 +30,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     _authSubscription = _authBloc.stream.listen((state) {
       if (state.user is AuthUserChanged) {
         if (state.user != null) {
-          print('Loading User Profile');
+          logger.i('Loading User Profile');
           add(LoadProfile(userId: state.authUser!.uid));
         }
       }
@@ -40,7 +41,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     LoadProfile event,
     Emitter<ProfileState> emit,
   ) async {
-    print('_onLoadProfile');
+    logger.i('_onLoadProfile');
     User user = await _databaseRepository.getUser(event.userId!).first;
     emit(ProfileLoaded(user: user));
   }
@@ -49,7 +50,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     EditProfile event,
     Emitter<ProfileState> emit,
   ) {
-    print('_onEditProfile');
+    logger.i('_onEditProfile');
     if (state is ProfileLoaded) {
       emit(
         ProfileLoaded(
@@ -64,8 +65,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     SaveProfile event,
     Emitter<ProfileState> emit,
   ) {
-    print('_onSaveProfile');
+    logger.i('_onSaveProfile');
     if (state is ProfileLoaded) {
+      logger.i("PASSING THIS USER: ${(state as ProfileLoaded).user}");
       _databaseRepository.updateUser((state as ProfileLoaded).user);
       emit(
         ProfileLoaded(
@@ -80,7 +82,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     UpdateUserProfile event,
     Emitter<ProfileState> emit,
   ) {
-    print('_onUpdateUserProfile');
+    logger.i('_onUpdateUserProfile');
     if (state is ProfileLoaded) {
       emit(
         ProfileLoaded(
@@ -93,7 +95,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   @override
   Future<void> close() async {
-    print("INSIDE PROFILEBLOC CANCEL");
+    logger.i("INSIDE PROFILEBLOC CANCEL");
     _authSubscription?.cancel();
     super.close();
   }

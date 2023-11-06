@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
@@ -20,17 +21,19 @@ class Email extends StatelessWidget {
     return OnboardingScreenLayout(
       currentStep: 2,
       onPressed: () async {
-        if (BlocProvider.of<SignupCubit>(context).state.status ==
-            FormzStatus.valid) {
-          await context.read<SignupCubit>().signUpWithCredentials();
-          context.read<OnboardingBloc>().add(
-                ContinueOnboarding(
-                  isSignup: true,
-                  user: User.empty.copyWith(
-                    id: context.read<SignupCubit>().state.user!.uid,
-                  ),
-                ),
-              );
+        final signupCubit = context.read<SignupCubit>();
+        final onboardingBloc = context.read<OnboardingBloc>();
+
+        if (signupCubit.state.status == FormzStatus.valid) {
+          await signupCubit.signUpWithCredentials();
+          onboardingBloc.add(
+            ContinueOnboarding(
+              isSignup: true,
+              user: User.empty.copyWith(
+                id: signupCubit.state.user!.uid,
+              ),
+            ),
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -46,6 +49,9 @@ class Email extends StatelessWidget {
           builder: (context, state) {
             return CustomTextField(
               hint: 'ENTER YOUR EMAIL',
+              maxLength: 30,
+              keyboardType: TextInputType.emailAddress,
+              inputFormat: FilteringTextInputFormatter.singleLineFormatter,
               errorText: state.email.invalid ? 'The email is invalid.' : null,
               onChanged: (value) {
                 context.read<SignupCubit>().emailChanged(value);
@@ -61,6 +67,9 @@ class Email extends StatelessWidget {
           builder: (context, state) {
             return CustomTextField(
               hint: 'ENTER YOUR PASSWORD',
+              maxLength: 20,
+              keyboardType: TextInputType.visiblePassword,
+              inputFormat: FilteringTextInputFormatter.singleLineFormatter,
               errorText: state.password.invalid
                   ? 'The password must be at least 8 characters, at least 1 number, at least 1 letter, and no spaces'
                   : null,

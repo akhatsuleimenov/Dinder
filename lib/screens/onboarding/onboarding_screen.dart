@@ -1,3 +1,4 @@
+import 'package:dinder/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -122,16 +123,19 @@ class OnboardingScreenLayout extends StatelessWidget {
                     child: Column(
                       children: [
                         StepProgressIndicator(
-                          totalSteps: 6,
+                          totalSteps: 5,
                           currentStep: currentStep,
                           selectedColor: Theme.of(context).primaryColor,
                           unselectedColor:
                               Theme.of(context).scaffoldBackgroundColor,
                         ),
                         const SizedBox(height: 10),
-                        CustomButton(
+                        CustomElevatedButton(
                           text: 'NEXT STEP',
+                          textColor: Colors.white,
                           onPressed: onPressed,
+                          color: Theme.of(context).primaryColor,
+                          width: MediaQuery.of(context).size.width,
                         ),
                       ],
                     ),

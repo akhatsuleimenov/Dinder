@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/models/models.dart';
 import '/repositories/repositories.dart';
+import '/widgets/widgets.dart';
 
 part 'match_event.dart';
 part 'match_state.dart';
@@ -27,7 +28,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   ) {
     _databaseSubscription =
         _databaseRepository.getMatches(event.user).listen((matchedUsers) {
-      print('Matched Users: $matchedUsers');
+      logger.i('Matched Users: $matchedUsers');
       add(UpdateMatches(matchedUsers: matchedUsers));
     });
   }
@@ -45,7 +46,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
 
   @override
   Future<void> close() async {
-    print("INSIDE MATCHBLOC CANCEL");
+    logger.i("INSIDE MATCHBLOC CANCEL");
     _databaseSubscription?.cancel();
     super.close();
   }

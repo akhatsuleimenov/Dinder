@@ -12,8 +12,6 @@ import 'screens/screens.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Start Firebase
   await Firebase.initializeApp();
-  print("Firebase initialized");
-
   runApp(const MyApp());
 }
 

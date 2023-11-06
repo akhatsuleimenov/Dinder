@@ -1,3 +1,5 @@
+import 'package:logger/logger.dart';
+
 export 'user_card.dart';
 export 'custom_appbar.dart';
 export 'custom_bottombar.dart';
@@ -6,4 +8,10 @@ export 'custom_text_container.dart';
 export 'user_image.dart';
 export 'custom_elevated_button.dart';
 export 'add_user_image.dart';
-export 'screen_arguments.dart';
+
+var logger = Logger(
+  printer: PrettyPrinter(
+    colors: false,
+    printEmojis: false,
+  ),
+);

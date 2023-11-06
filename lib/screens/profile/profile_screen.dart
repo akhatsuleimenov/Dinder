@@ -1,13 +1,18 @@
 import 'package:dinder/cubits/login/login_cubit.dart';
 import 'package:dinder/screens/onboarding/widgets/custom_text_field.dart';
-import 'package:dinder/services/indexService.dart';
+import 'package:dinder/services/index_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import '/blocs/blocs.dart';
 import '/repositories/repositories.dart';
 import '/screens/screens.dart';
 import '/widgets/widgets.dart';
+
+bool isNumeric(String s) {
+  return RegExp(r'^[0-9]+$').hasMatch(s);
+}
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -18,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
     return MaterialPageRoute(
         settings: const RouteSettings(name: routeName),
         builder: (context) {
-          print(BlocProvider.of<AuthBloc>(context).state);
+          logger.i(BlocProvider.of<AuthBloc>(context).state);
 
           return BlocProvider.of<AuthBloc>(context).state.status ==
                   AuthStatus.unauthenticated
@@ -75,13 +80,14 @@ class ProfileScreen extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 40.0),
+                          padding: const EdgeInsets.only(bottom: 10.0),
                           child: Text(
                             state.user.name,
                             style: Theme.of(context)
                                 .textTheme
-                                .titleLarge!
-                                .copyWith(color: Colors.white),
+                                .displayLarge!
+                                .copyWith(
+                                    color: Theme.of(context).primaryColor),
                           ),
                         ),
                       ),
@@ -91,15 +97,8 @@ class ProfileScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: CustomElevatedButton(
                       text: state.isEditingOn ? 'Save' : 'Edit',
-                      beginColor: state.isEditingOn
-                          ? Theme.of(context).primaryColor
-                          : Colors.white,
-                      endColor: state.isEditingOn
-                          ? Colors.white
-                          : Theme.of(context).scaffoldBackgroundColor,
-                      textColor: state.isEditingOn
-                          ? Colors.white
-                          : Theme.of(context).primaryColor,
+                      color: Theme.of(context).primaryColor,
+                      textColor: Colors.white,
                       onPressed: () {
                         context.read<ProfileBloc>().add(
                               state.isEditingOn
@@ -118,6 +117,10 @@ class ProfileScreen extends StatelessWidget {
                         _TextField(
                           title: 'Biography',
                           value: state.user.bio,
+                          inputFormat: FilteringTextInputFormatter.allow(
+                              RegExp('[a-zA-Z0-9 ]')),
+                          maxLength: 100,
+                          keyboardType: TextInputType.text,
                           onChanged: (value) {
                             context.read<ProfileBloc>().add(
                                   UpdateUserProfile(
@@ -129,14 +132,14 @@ class ProfileScreen extends StatelessWidget {
                         _TextField(
                           title: 'Age',
                           value: '${state.user.age}',
+                          maxLength: 2,
+                          keyboardType: TextInputType.number,
+                          inputFormat: FilteringTextInputFormatter.digitsOnly,
                           onChanged: (value) {
-                            if (value == null || value == '') {
-                              return;
-                            }
                             context.read<ProfileBloc>().add(
                                   UpdateUserProfile(
                                     user: state.user
-                                        .copyWith(age: int.parse(value)),
+                                        .copyWith(age: int.parse(value!)),
                                   ),
                                 );
                           },
@@ -144,6 +147,8 @@ class ProfileScreen extends StatelessWidget {
                         _TextField(
                           title: 'Major',
                           value: state.user.major,
+                          keyboardType: TextInputType.text,
+                          maxLength: 30,
                           onChanged: (value) {
                             context.read<ProfileBloc>().add(
                                   UpdateUserProfile(
@@ -174,12 +179,18 @@ class _TextField extends StatelessWidget {
   final String title;
   final String value;
   final Function(String?) onChanged;
+  final TextInputType keyboardType;
+  final TextInputFormatter? inputFormat;
+  final int maxLength;
 
   const _TextField({
     Key? key,
     required this.title,
     required this.value,
     required this.onChanged,
+    required this.keyboardType,
+    required this.maxLength,
+    this.inputFormat,
   }) : super(key: key);
 
   @override
@@ -192,20 +203,23 @@ class _TextField extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.displaySmall,
+              style: Theme.of(context).textTheme.displayMedium,
             ),
             const SizedBox(height: 10),
             state.isEditingOn
                 ? CustomTextField(
                     initialValue: value,
                     onChanged: onChanged,
+                    keyboardType: keyboardType,
+                    inputFormat: inputFormat,
+                    maxLength: maxLength,
                   )
                 : Text(
                     value,
                     style: Theme.of(context)
                         .textTheme
-                        .labelLarge!
-                        .copyWith(height: 1.5),
+                        .headlineLarge!
+                        .copyWith(fontWeight: FontWeight.normal),
                   ),
             const SizedBox(height: 10),
           ],
@@ -292,28 +306,20 @@ class _SignOut extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextButton(
-              onPressed: () {
-                IndexService.instance.logout();
-                RepositoryProvider.of<AuthRepository>(context).signOut();
-                context.read<LoginCubit>().statusChanged(FormzStatus.pure);
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    LoginScreen.routeName, (route) => false);
-              },
-              child: Center(
-                child: Text(
-                  'Sign Out',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayMedium!
-                      .copyWith(color: Theme.of(context).primaryColor),
-                ),
-              ),
-            ),
-          ],
+        return Center(
+          child: CustomElevatedButton(
+            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+            text: 'Sign Out',
+            textColor: Theme.of(context).primaryColor,
+            onPressed: () {
+              IndexService.instance.logout();
+              RepositoryProvider.of<AuthRepository>(context).signOut();
+              context.read<LoginCubit>().statusChanged(FormzStatus.pure);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  LoginScreen.routeName, (route) => false);
+            },
+          ),
         );
       },
     );

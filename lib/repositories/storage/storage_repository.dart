@@ -1,9 +1,11 @@
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:image_picker/image_picker.dart';
 
 import '/models/models.dart';
 import '/repositories/repositories.dart';
+import '/widgets/widgets.dart';
 
 class StorageRepository extends BaseStorageRepository {
   final firebase_storage.FirebaseStorage storage =
@@ -24,7 +26,7 @@ class StorageRepository extends BaseStorageRepository {
             ),
           );
     } catch (err) {
-      print(err);
+      logger.i(err);
     }
   }
 

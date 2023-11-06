@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:equatable/equatable.dart';
 
+import '/widgets/widgets.dart';
 import '/models/models.dart';
 import '/repositories/repositories.dart';
 
@@ -82,7 +83,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   @override
   Future<void> close() {
-    print("INSIDE CHATBLOC CANCEL");
+    logger.i("INSIDE CHATBLOC CANCEL");
     _chatSubscription?.cancel();
     return super.close();
   }

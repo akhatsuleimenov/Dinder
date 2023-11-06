@@ -1,5 +1,5 @@
 import 'package:dinder/screens/screens.dart';
-import 'package:dinder/services/indexService.dart';
+import 'package:dinder/services/index_service.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomBar extends StatelessWidget {
@@ -37,16 +37,17 @@ class CustomBottomBar extends StatelessWidget {
       backgroundColor: Colors.white,
       onTap: (index) {
         if (authService.selectedIndex != index) {
-          if (authService.selectedIndex == 0) {
-            Navigator.of(context).pushNamed(mapping[index]!);
-          } else {
-            if (index == 0) {
-              Navigator.of(context)
-                  .popUntil(ModalRoute.withName(HomeScreen.routeName));
-            } else {
-              Navigator.of(context).pushReplacementNamed(mapping[index]!);
-            }
-          }
+          // if (authService.selectedIndex == 0) {
+          //   Navigator.of(context).pushNamed(mapping[index]!);
+          // } else {
+          //   if (index == 0) {
+          //     Navigator.of(context)
+          //         .popUntil(ModalRoute.withName(HomeScreen.routeName));
+          //   } else {
+          //     Navigator.of(context).pushReplacementNamed(mapping[index]!);
+          //   }
+          // }
+          Navigator.of(context).pushReplacementNamed(mapping[index]!);
           authService.update(index);
         }
       },

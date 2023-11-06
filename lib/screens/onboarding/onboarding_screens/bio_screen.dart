@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/screens/screens.dart';
@@ -17,12 +18,16 @@ class Bio extends StatelessWidget {
     return OnboardingScreenLayout(
       currentStep: 5,
       onPressed: () {
-        Navigator.pushNamed(context, HomeScreen.routeName);
+        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
       },
       children: [
         const CustomTextHeader(text: 'Tell Me Who R U?'),
         CustomTextField(
           hint: 'BIO HERE',
+          maxLength: 100,
+          inputFormat:
+              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9 ]')),
+          keyboardType: TextInputType.text,
           onChanged: (value) {
             context.read<OnboardingBloc>().add(
                   UpdateUser(
@@ -35,6 +40,8 @@ class Bio extends StatelessWidget {
         const CustomTextHeader(text: 'What Is Your Major?'),
         CustomTextField(
           hint: 'Major',
+          maxLength: 30,
+          keyboardType: TextInputType.text,
           onChanged: (value) {
             context.read<OnboardingBloc>().add(
                   UpdateUser(

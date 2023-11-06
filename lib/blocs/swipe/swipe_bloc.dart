@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/widgets/widgets.dart';
 import '/blocs/blocs.dart';
 import '/models/models.dart';
 import '/repositories/repositories.dart';
@@ -28,7 +29,7 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
 
     _authSubscription = _authBloc.stream.listen((state) {
       if (state.status == AuthStatus.authenticated) {
-        print('Auth Subscription: Loading Users');
+        logger.i('Auth Subscription: Loading Users');
         add(LoadUsers());
       }
     });
@@ -38,12 +39,17 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
     LoadUsers event,
     Emitter<SwipeState> emit,
   ) {
-    print('Loading users');
+    logger.i('Loading users');
     if (_authBloc.state.user != null) {
-      print('Loading users');
+      logger.i('Loading users');
       User currentUser = _authBloc.state.user!;
-      print('CURRENTUSER : $currentUser');
-      _databaseRepository.getUsersToSwipe(currentUser).listen((users) {
+      logger.i("SUBSCRIPTION BITCH: $_authSubscription");
+      _authSubscription?.cancel(); // cancel previous subscription if exists
+
+      logger.i('CURRENTUSER : $currentUser');
+      _authSubscription =
+          _databaseRepository.getUsersToSwipe(currentUser).listen((users) {
+        // if (!_controller.isClosed) {
         add(UpdateHome(users: users));
       });
     }
@@ -53,13 +59,12 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
     UpdateHome event,
     Emitter<SwipeState> emit,
   ) {
-    print('Updating Home');
-    print(event.users);
+    logger.i('Updating Home');
     if (event.users!.isNotEmpty) {
-      print('SwipeLoaded');
+      logger.i('SwipeLoaded');
       emit(SwipeLoaded(users: event.users!));
     } else {
-      print('SwipeError');
+      logger.i('SwipeError');
       emit(SwipeError());
     }
   }
@@ -68,7 +73,7 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
     SwipeLeft event,
     Emitter<SwipeState> emit,
   ) {
-    print("Inside Swipe LEFT");
+    logger.i("Inside Swipe LEFT");
     if (state is SwipeLoaded) {
       final state = this.state as SwipeLoaded;
 
@@ -92,7 +97,7 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
     SwipeRight event,
     Emitter<SwipeState> emit,
   ) async {
-    print("Inside Swipe Right");
+    logger.i("Inside Swipe Right");
     final state = this.state as SwipeLoaded;
     String userId = _authBloc.state.authUser!.uid;
     List<User> users = List.from(state.users)..remove(event.user);
@@ -108,20 +113,20 @@ class SwipeBloc extends Bloc<SwipeEvent, SwipeState> {
         userId,
         event.user.id!,
       );
-      print("Updated Swipe Matched");
+      logger.i("Updated Swipe Matched");
       emit(SwipeMatched(user: event.user));
     } else if (users.isNotEmpty) {
-      print("Updated Swipe Loaded");
+      logger.i("Updated Swipe Loaded");
       emit(SwipeLoaded(users: users));
     } else {
-      print("Updated Swipe Error");
+      logger.i("Updated Swipe Error");
       emit(SwipeError());
     }
   }
 
   @override
   Future<void> close() async {
-    print("INSIDE SWIPEBLOC CANCEL");
+    logger.i("INSIDE SWIPEBLOC CANCEL");
     _authSubscription?.cancel();
     super.close();
   }

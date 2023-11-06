@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/screens/screens.dart';
@@ -26,6 +27,8 @@ class Info extends StatelessWidget {
         const SizedBox(height: 10),
         CustomTextField(
           hint: 'ENTER YOUR NAME',
+          maxLength: 15,
+          keyboardType: TextInputType.text,
           onChanged: (value) {
             context.read<OnboardingBloc>().add(
                   UpdateUser(
@@ -62,6 +65,9 @@ class Info extends StatelessWidget {
         const SizedBox(height: 10),
         CustomTextField(
           hint: 'ENTER YOUR AGE',
+          maxLength: 2,
+          keyboardType: TextInputType.number,
+          inputFormat: FilteringTextInputFormatter.digitsOnly,
           onChanged: (value) {
             context.read<OnboardingBloc>().add(
                   UpdateUser(

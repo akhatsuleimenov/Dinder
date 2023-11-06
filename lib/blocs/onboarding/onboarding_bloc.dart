@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:dinder/widgets/widgets.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +15,7 @@ part 'onboarding_state.dart';
 class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   final DatabaseRepository _databaseRepository;
   final StorageRepository _storageRepository;
+  StreamSubscription? _userSubscription;
 
   OnboardingBloc({
     required DatabaseRepository databaseRepository,
@@ -76,9 +80,18 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       User user = (state as OnboardingLoaded).user;
       await _storageRepository.uploadImage(user, event.image);
 
-      _databaseRepository.getUser(user.id!).listen((user) {
+      _userSubscription?.cancel(); // Cancel any previous subscription
+
+      _userSubscription = _databaseRepository.getUser(user.id!).listen((user) {
         add(UpdateUser(user: user));
       });
     }
+  }
+
+  @override
+  Future<void> close() {
+    logger.i("INSIDE ONBOARDINGBLOC CANCEL");
+    _userSubscription?.cancel();
+    return super.close();
   }
 }

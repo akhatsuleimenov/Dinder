@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '/screens/screens.dart';
 import '/blocs/blocs.dart';
@@ -26,7 +25,7 @@ class Start extends StatelessWidget {
           child: SizedBox(
             height: 200,
             width: 200,
-            child: SvgPicture.asset('assets/logo.svg'),
+            child: Image.asset('assets/logo.png'),
           ),
         ),
         const SizedBox(
@@ -39,7 +38,7 @@ class Start extends StatelessWidget {
           ),
         ),
         Text(
-          'Generating long and coherent text is an important but challenging task, particularly for open-ended language generation tasks such as story generation.',
+          'From now on you will never run out of Meal Swipes and will always have a friend to enjoy the meal with',
           style: Theme.of(context)
               .textTheme
               .headlineLarge

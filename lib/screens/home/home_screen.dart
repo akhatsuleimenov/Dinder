@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,14 +17,6 @@ class HomeScreen extends StatelessWidget {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
       builder: (context) {
-        // print(BlocProvider.of<AuthBloc>(context).state.status);
-        // Timer(const Duration(seconds: 2), () {
-        //   print(
-        //       "HEEEEERE : ${BlocProvider.of<AuthBloc>(context).state.status}");
-        // });
-        // Future.delayed(Duration(seconds: 2), () {
-        //   return;
-        // });
         return const HomeScreen();
       },
     );
@@ -61,20 +50,18 @@ class HomeScreen extends StatelessWidget {
                 child: BlocBuilder<SwipeBloc, SwipeState>(
                   builder: (context, state) {
                     if (state is SwipeLoading) {
-                      print('SwipeLoading');
+                      logger.i('SwipeLoading');
                       return const Scaffold(
-                          appBar: CustomAppBar(
-                            title: 'HOME',
-                          ),
+                          appBar: CustomAppBar(title: 'HOME'),
                           bottomNavigationBar: CustomBottomBar(),
                           body: Center(
                             child: CircularProgressIndicator(),
                           ));
                     } else if (state is SwipeLoaded) {
-                      print('SwipeLoadedHomeScreen');
+                      logger.i('SwipeLoadedHomeScreen');
                       return SwipeLoadedHomeScreen(state: state);
                     } else if (state is SwipeMatched) {
-                      print('SwipeMatchedHomeScreen');
+                      logger.i('SwipeMatchedHomeScreen');
                       return SwipeMatchedHomeScreen(
                         state: state,
                         onPressed: () {
@@ -82,30 +69,15 @@ class HomeScreen extends StatelessWidget {
                         },
                       );
                     } else if (state is SwipeError) {
-                      print('SwipeError');
+                      logger.i('SwipeError');
                       return Scaffold(
-                        appBar: const CustomAppBar(
-                          title: 'HOME',
-                        ),
+                        appBar: const CustomAppBar(title: 'HOME'),
                         bottomNavigationBar: const CustomBottomBar(),
-                        body: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const SizedBox(width: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'No more users',
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                              ],
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: SwitchExample(),
-                            ),
-                          ],
+                        body: Center(
+                          child: Text(
+                            'No more users',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
                         ),
                       );
                     } else {
@@ -134,11 +106,9 @@ class SwipeLoadedHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var userCount = state.users.length;
-    print("Inside SwipeLoadedHomeScreen");
+    logger.i("Inside SwipeLoadedHomeScreen");
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'HOME',
-      ),
+      appBar: const CustomAppBar(title: 'HOME'),
       bottomNavigationBar: const CustomBottomBar(),
       body: Column(
         children: [
@@ -152,19 +122,13 @@ class SwipeLoadedHomeScreen extends StatelessWidget {
                   ? UserCard(user: state.users[1])
                   : Container(),
               onDragEnd: (drag) {
-                if (drag.velocity.pixelsPerSecond.dx < 0) {
-                  context
-                      .read<SwipeBloc>()
-                      .add(SwipeLeft(user: state.users[0]));
-                } else {
-                  context
-                      .read<SwipeBloc>()
-                      .add(SwipeRight(user: state.users[0]));
-                }
+                context.read<SwipeBloc>().add(
+                      drag.velocity.pixelsPerSecond.dx < 0
+                          ? SwipeLeft(user: state.users[0])
+                          : SwipeRight(user: state.users[0]),
+                    );
               },
-              child: UserCard(
-                user: state.users[0],
-              ),
+              child: UserCard(user: state.users[0]),
             ),
           ),
           Padding(
@@ -172,41 +136,52 @@ class SwipeLoadedHomeScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                InkWell(
-                  onTap: () {
-                    context
-                        .read<SwipeBloc>()
-                        .add(SwipeLeft(user: state.users[0]));
-                  },
-                  child: ChoiceButton(
-                    width: 60,
-                    height: 60,
-                    size: 30,
+                _ActionButton(
+                    swipeEvent: SwipeLeft(user: state.users[0]),
                     color: Theme.of(context).primaryColor,
                     hasGradient: false,
-                    icon: Icons.clear_rounded,
-                  ),
-                ),
-                const SwitchExample(),
-                InkWell(
-                  onTap: () {
-                    context
-                        .read<SwipeBloc>()
-                        .add(SwipeRight(user: state.users[0]));
-                  },
-                  child: const ChoiceButton(
-                    width: 60,
-                    height: 60,
-                    size: 30,
+                    icon: Icons.clear_rounded),
+                // const SwitchExample(),
+                _ActionButton(
+                    swipeEvent: SwipeRight(user: state.users[0]),
                     color: Colors.white,
                     hasGradient: true,
-                    icon: Icons.favorite,
-                  ),
-                ),
+                    icon: Icons.favorite),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.swipeEvent,
+    required this.color,
+    required this.hasGradient,
+    required this.icon,
+  });
+
+  final SwipeEvent swipeEvent;
+  final Color color;
+  final bool hasGradient;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        context.read<SwipeBloc>().add(swipeEvent);
+      },
+      child: ChoiceButton(
+        width: 60,
+        height: 60,
+        size: 30,
+        color: color,
+        hasGradient: hasGradient,
+        icon: icon,
       ),
     );
   }
@@ -257,8 +232,7 @@ class SwipeMatchedHomeScreen extends StatelessWidget {
               text: 'BACK TO SWIPING',
               textColor: Colors.white,
               onPressed: onPressed,
-              beginColor: Theme.of(context).primaryColor,
-              endColor: Theme.of(context).primaryColor,
+              color: Theme.of(context).primaryColor,
             ),
           ],
         ),
@@ -296,106 +270,109 @@ class _ProfilePicCircle extends StatelessWidget {
   }
 }
 
-class SwitchExample extends StatefulWidget {
-  const SwitchExample({
-    Key? key,
-  }) : super(key: key);
-  @override
-  State<SwitchExample> createState() => _SwitchExampleState();
-}
+// class SwitchExample extends StatefulWidget {
+//   const SwitchExample({
+//     Key? key,
+//   }) : super(key: key);
+//   @override
+//   State<SwitchExample> createState() => _SwitchExampleState();
+// }
 
-class _SwitchExampleState extends State<SwitchExample> {
-  bool _isLoading = true;
-  @override
-  void initState() {
-    super.initState();
+// class _SwitchExampleState extends State<SwitchExample> {
+//   bool _isLoading = true;
+//   @override
+//   void initState() {
+//     super.initState();
 
-    // 1. Using Timer
-    Timer(const Duration(seconds: 1), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
-// 2. Future.delayed
-    // Future.delayed(Duration(seconds: 2), () {
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-    // });
-  }
+//     // 1. Using Timer
+//     Timer(const Duration(seconds: 1), () {
+//       if (mounted) {
+//         setState(() {
+//           _isLoading = false;
+//         });
+//       }
+//     });
+// // 2. Future.delayed
+//     // Future.delayed(Duration(seconds: 2), () {
+//     //   setState(() {
+//     //     _isLoading = false;
+//     //   });
+//     // });
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    print("Isloading is: $_isLoading");
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        return _isLoading
-            ? const CircularProgressIndicator()
-            : AnimatedToggleSwitch.dual(
-                // // This bool value toggles the switch.
-                // value: light,
-                // activeColor: CupertinoColors.activeBlue,
-                onChanged: (bool value) {
-                  // This is called when the user toggles the switch.
+//   @override
+//   Widget build(BuildContext context) {
+//     logger.i("Isloading is: $_isLoading");
+//     return BlocBuilder<ProfileBloc, ProfileState>(
+//       builder: (context, state) {
+//         return _isLoading
+//             ? const CircularProgressIndicator()
+//             : AnimatedToggleSwitch.dual(
+//                 // // This bool value toggles the switch.
+//                 // value: light,
+//                 // activeColor: CupertinoColors.activeBlue,
+//                 onChanged: (bool value) {
+//                   // This is called when the user toggles the switch.
 
-                  setState(() {
-                    // widget.giver = value;
-                    globalGiver = value;
-                  });
-                  // state as ProfileLoaded;
-                  print("Before UpdateUserProfile: ${state.user}");
-                  context.read<ProfileBloc>().add(
-                        UpdateUserProfile(
-                          user: state.user.copyWith(
-                            giver: value,
-                          ),
-                        ),
-                      );
-                  print("After UpdateUserProfile: ${state.user}");
-                  context.read<ProfileBloc>().add(
-                        SaveProfile(user: state.user),
-                      );
-                },
-                current: (state as ProfileLoaded).user.giver,
-                first: true,
-                second: false,
-                iconBuilder: (value) => value
-                    ? const Icon(Icons.fastfood)
-                    : const Icon(Icons.no_food),
-                textBuilder: (value) => value
-                    ? Center(
-                        child: Text(
-                        'GIVE',
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ))
-                    : Center(
-                        child: Text(
-                          'GET',
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
-                      ),
-                style: ToggleStyle(
-                  indicatorColor: Theme.of(context).primaryColor,
-                  backgroundGradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).scaffoldBackgroundColor,
-                      Theme.of(context).primaryColor,
-                    ],
-                  ),
-                  borderColor: Colors.transparent,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).primaryColor.withAlpha(50),
-                      spreadRadius: 2,
-                      blurRadius: 2,
-                      offset: const Offset(2, 2),
-                    ),
-                  ],
-                ),
-              );
-      },
-    );
-  }
-}
+//                   // setState(() {
+//                   //   // widget.giver = value;
+//                   //   globalGiver = value;
+//                   // });
+//                   // state as ProfileLoaded;
+//                   logger.i("STATE IS: $state");
+//                   logger.i(state.user);
+//                   logger.i("Before UpdateUserProfile: ${state.user}");
+//                   logger.i(context.read<ProfileBloc>().state);
+//                   context.read<ProfileBloc>().add(
+//                         UpdateUserProfile(
+//                           user: state.user.copyWith(
+//                             giver: value,
+//                           ),
+//                         ),
+//                       );
+//                   logger.i("After UpdateUserProfile: ${state.user}");
+//                   context.read<ProfileBloc>().add(
+//                         SaveProfile(user: state.user),
+//                       );
+//                 },
+//                 current: (state as ProfileLoaded).user.giver,
+//                 first: true,
+//                 second: false,
+//                 iconBuilder: (value) => value
+//                     ? const Icon(Icons.fastfood)
+//                     : const Icon(Icons.no_food),
+//                 textBuilder: (value) => value
+//                     ? Center(
+//                         child: Text(
+//                         'GIVE',
+//                         style: Theme.of(context).textTheme.displaySmall,
+//                       ))
+//                     : Center(
+//                         child: Text(
+//                           'GET',
+//                           style: Theme.of(context).textTheme.displaySmall,
+//                         ),
+//                       ),
+//                 style: ToggleStyle(
+//                   indicatorColor: Theme.of(context).primaryColor,
+//                   backgroundGradient: LinearGradient(
+//                     colors: [
+//                       Theme.of(context).scaffoldBackgroundColor,
+//                       Theme.of(context).primaryColor,
+//                     ],
+//                   ),
+//                   borderColor: Colors.transparent,
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Theme.of(context).primaryColor.withAlpha(50),
+//                       spreadRadius: 2,
+//                       blurRadius: 2,
+//                       offset: const Offset(2, 2),
+//                     ),
+//                   ],
+//                 ),
+//               );
+//       },
+//     );
+//   }
+// }

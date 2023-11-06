@@ -37,6 +37,18 @@ class Pictures extends StatelessWidget {
             ),
             itemCount: 6,
             itemBuilder: (BuildContext context, int index) {
+              void handleImageSelection(XFile? image) {
+                if (image == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('No image was selected.')),
+                  );
+                } else {
+                  logger.i('Uploading ...');
+                  BlocProvider.of<OnboardingBloc>(context)
+                      .add(UpdateUserImages(image: image));
+                }
+              }
+
               return (imageCount > index)
                   ? UserImage.medium(
                       url: images[index],
@@ -50,22 +62,24 @@ class Pictures extends StatelessWidget {
                       ),
                     )
                   : AddUserImage(
-                      onPressed: () async {
-                        final XFile? image = await ImagePicker().pickImage(
-                            source: ImageSource.gallery, imageQuality: 50);
+                      onPressed: () {
+                        ImagePicker()
+                            .pickImage(
+                                source: ImageSource.gallery, imageQuality: 50)
+                            .then(handleImageSelection);
 
-                        if (image == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('No image was selected.'),
-                            ),
-                          );
-                        } else {
-                          print('Uploading ...');
-                          BlocProvider.of<OnboardingBloc>(context).add(
-                            UpdateUserImages(image: image),
-                          );
-                        }
+                        // if (image == null) {
+                        //   ScaffoldMessenger.of(currentContext).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text('No image was selected.'),
+                        //     ),
+                        //   );
+                        // } else {
+                        //   logger.i('Uploading ...');
+                        //   BlocProvider.of<OnboardingBloc>(currentContext).add(
+                        //     UpdateUserImages(image: image),
+                        //   );
+                        // }
                       },
                     );
             },

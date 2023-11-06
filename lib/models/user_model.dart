@@ -155,6 +155,9 @@ class User extends Equatable {
       bio: bio ?? this.bio,
       major: major ?? this.major,
       giver: giver ?? this.giver,
+      swipeLeft: swipeLeft ?? this.swipeLeft,
+      swipeRight: swipeRight ?? this.swipeRight,
+      matches: matches ?? this.matches,
       genderPreference: genderPreference ?? this.genderPreference,
       ageRangePreference: ageRangePreference ?? this.ageRangePreference,
     );

@@ -28,7 +28,6 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) {
-        print("BUILDED! ${previous.status} - ${current.status}");
         return previous.status != current.status;
       },
       builder: (context, state) {
@@ -38,7 +37,6 @@ class LoginScreen extends StatelessWidget {
           ),
           body: BlocListener<LoginCubit, LoginState>(
             listener: (context, state) {
-              print("LISTENING! ${state.status} - ${state.status}");
               if (state.status.isSubmissionFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -107,15 +105,14 @@ class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomElevatedButton(
+      color: Theme.of(context).primaryColor,
       text: 'SIGN UP',
       textColor: Colors.white,
+
       // onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
       //     OnboardingScreen.routeName, ModalRoute.withName('/onboarding')),
       onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
           OnboardingScreen.routeName, (route) => false),
-
-      beginColor: Theme.of(context).primaryColor,
-      endColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 }
@@ -155,15 +152,16 @@ class _LogInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("STATUS: ${state.status}");
+    logger.i("STATUS: ${state.status}");
     return state.status == FormzStatus.submissionInProgress
         ? const CircularProgressIndicator()
         : CustomElevatedButton(
             text: 'LOG IN',
+            color: Colors.white,
             textColor: Theme.of(context).primaryColor,
             onPressed: () {
               if (state.status == FormzStatus.valid) {
-                print("STATUS 2: ${state.status}");
+                logger.i("STATUS 2: ${state.status}");
                 context.read<LoginCubit>().logInWithCredentials();
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     HomeScreen.routeName, (route) => false);
@@ -175,8 +173,6 @@ class _LogInButton extends StatelessWidget {
                 );
               }
             },
-            beginColor: Colors.white,
-            endColor: Theme.of(context).scaffoldBackgroundColor,
           );
   }
 }
