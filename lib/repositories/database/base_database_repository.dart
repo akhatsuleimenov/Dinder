@@ -4,6 +4,7 @@ abstract class BaseDatabaseRepository {
   Stream<User> getUser(String userId);
   Stream<Chat> getChat(String chatId);
   Stream<List<User>> getUsers(User user);
+  Stream<List<User>> getAllUsers(User user);
   Stream<List<Chat>> getChats(String userId);
   Stream<List<User>> getUsersToSwipe(User user);
   Stream<List<Match>> getMatches(User user);

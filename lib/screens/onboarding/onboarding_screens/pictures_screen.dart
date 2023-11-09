@@ -29,7 +29,7 @@ class Pictures extends StatelessWidget {
         const CustomTextHeader(text: 'Add 2 or More Pictures'),
         const SizedBox(height: 20),
         SizedBox(
-          height: 350,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
@@ -67,19 +67,6 @@ class Pictures extends StatelessWidget {
                             .pickImage(
                                 source: ImageSource.gallery, imageQuality: 50)
                             .then(handleImageSelection);
-
-                        // if (image == null) {
-                        //   ScaffoldMessenger.of(currentContext).showSnackBar(
-                        //     const SnackBar(
-                        //       content: Text('No image was selected.'),
-                        //     ),
-                        //   );
-                        // } else {
-                        //   logger.i('Uploading ...');
-                        //   BlocProvider.of<OnboardingBloc>(currentContext).add(
-                        //     UpdateUserImages(image: image),
-                        //   );
-                        // }
                       },
                     );
             },

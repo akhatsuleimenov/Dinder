@@ -7,7 +7,6 @@ import '/blocs/blocs.dart';
 import '/cubits/cubits.dart';
 import '/repositories/repositories.dart';
 import 'onboarding_screens/screens.dart';
-import 'widgets/widgets.dart';
 
 class OnboardingScreen extends StatelessWidget {
   static const String routeName = '/onboarding';

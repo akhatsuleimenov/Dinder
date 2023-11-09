@@ -8,7 +8,7 @@
 PRODUCT_NAME = dinder
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.dinder
+PRODUCT_BUNDLE_IDENTIFIER = info.dinder
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 info. All rights reserved.

@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:69781794377:android:8594e1dc01c5aa4a2e5998",
         "android_client_info": {
-          "package_name": "com.example.dinder"
+          "package_name": "info.dinder"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "69781794377-g7h7kbhh9mha7oh6itnrmrv7s38sqq4n.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.dinder"
+                "bundle_id": "info.dinder"
               }
             }
           ]

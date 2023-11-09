@@ -67,6 +67,13 @@ class DatabaseRepository extends BaseDatabaseRepository {
   }
 
   @override
+  Stream<List<User>> getAllUsers(User user) {
+    return _firebaseFirestore.collection('users').snapshots().map((snap) {
+      return snap.docs.map((doc) => User.fromSnapshot(doc)).toList();
+    });
+  }
+
+  @override
   Future<void> updateUserSwipe(
     String userId,
     String matchId,
@@ -152,7 +159,7 @@ class DatabaseRepository extends BaseDatabaseRepository {
     return Rx.combineLatest3(
       getUser(user.id!),
       getChats(user.id!),
-      getUsers(user),
+      getAllUsers(user),
       (
         User user,
         List<Chat> userChats,
